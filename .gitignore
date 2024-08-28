@@ -1,0 +1,10 @@
+node_modules/
+dist/
+build/
+coverage/
+*.log
+*.tmp
+*.js.map
+yarn-error.log
+.yarn/
+tsconfig.tsbuildinfo
