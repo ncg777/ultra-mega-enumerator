@@ -1,18 +1,16 @@
 import { Enumeration } from './../utils/Enumeration';
 
 export class PermutationEnumeration extends Enumeration<number[]> {
-    private p: number[];
+    private p: number[]|null;
     
     // Constructor. WARNING: Don't make n too large.
     public constructor(n: number) {
         super();
-        if (n < 1) {
-            throw new Error("Min 1");
+        if (n < 0) {
+            throw new Error("Min 0");
         }
-        this.p = Array.from({ length: n }, (_, i) => i);
-        for (let i = 0; i < this.p.length; i++) {
-            this.p[i] = i;
-        }
+        this.p = [];
+        for(let i=0;i<n;i++) this.p.push(i);
     }
 
 
@@ -56,8 +54,11 @@ export class PermutationEnumeration extends Enumeration<number[]> {
     }
 
     nextElement(): number[] {
-        this.p = PermutationEnumeration.getNext(this.p)!;
+        const o = this.p;
+        if(o == null) {throw new Error("No such element");}
+
+        this.p = PermutationEnumeration.getNext(this.p!);
         
-        return this.p;
+        return o;
     }
 }
