@@ -1,11 +1,11 @@
-import { Enumeration } from './../utils/Enumeration';
+import { AbstractEnumeration } from './AbstractEnumeration';
 
 /**
  * Enumerates all values of the mixed radix base given as a parameter.
  * 
  * @link http://en.wikipedia.org/wiki/Mixed_radix
  */
-export class MixedRadixEnumeration extends Enumeration<number[]> {
+export class MixedRadixEnumeration extends AbstractEnumeration<number[]> {
   private base: number[] = [];
   private current: number[] | null=null;
   private currentIndex:number = -1;

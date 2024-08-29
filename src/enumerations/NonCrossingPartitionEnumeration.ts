@@ -1,7 +1,7 @@
-import { Enumeration } from './../utils/Enumeration';
+import { AbstractEnumeration } from './AbstractEnumeration';
 import { DyckWordEnumeration } from './DyckWordEnumeration';
 
-export class NonCrossingPartitionEnumeration extends Enumeration<number[]> {
+export class NonCrossingPartitionEnumeration extends AbstractEnumeration<number[]> {
   private readonly dwe: DyckWordEnumeration;
 
   public constructor(n: number) {

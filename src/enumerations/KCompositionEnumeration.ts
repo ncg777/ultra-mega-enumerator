@@ -1,8 +1,8 @@
-import { Enumeration } from './../utils/Enumeration';
+import { AbstractEnumeration } from './AbstractEnumeration';
 import { Composition } from './../objects/Composition';
 import { CombinationEnumeration } from './CombinationEnumeration';
 
-export class KCompositionEnumeration extends Enumeration<Composition> {
+export class KCompositionEnumeration extends AbstractEnumeration<Composition> {
     private ce: CombinationEnumeration;
     private n: number;
 

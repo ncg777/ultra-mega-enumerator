@@ -1,7 +1,7 @@
-import { Enumeration } from './../utils/Enumeration';
+import { AbstractEnumeration } from './AbstractEnumeration';
 import { MixedRadixEnumeration } from './MixedRadixEnumeration';
 
-export class WordEnumeration extends Enumeration<number[]> {
+export class WordEnumeration extends AbstractEnumeration<number[]> {
   private mre: MixedRadixEnumeration;
 
   constructor(length: number, size: number) {

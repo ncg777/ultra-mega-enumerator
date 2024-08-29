@@ -1,7 +1,7 @@
-import { Enumeration } from './../utils/Enumeration';
+import { AbstractEnumeration } from './AbstractEnumeration';
 import { MixedRadixEnumeration } from './MixedRadixEnumeration';
 
-export class KPermutationEnumeration extends Enumeration<Array<number>> {
+export class KPermutationEnumeration extends AbstractEnumeration<Array<number>> {
     private mre: MixedRadixEnumeration;
     private n: number;
     private k: number;

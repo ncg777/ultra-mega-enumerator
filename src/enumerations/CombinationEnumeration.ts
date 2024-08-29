@@ -1,7 +1,7 @@
-import { Enumeration } from './../utils/Enumeration';
+import { AbstractEnumeration } from './AbstractEnumeration';
 import { Combination } from './../objects/Combination'
 
-export class CombinationEnumeration extends Enumeration<Combination> {
+export class CombinationEnumeration extends AbstractEnumeration<Combination> {
   private current: Combination | null;
 
   constructor(n: number, k: number) {

@@ -1,6 +1,6 @@
-import { Enumeration } from './../utils/Enumeration';
+import { AbstractEnumeration } from './AbstractEnumeration';
 
-export class PermutationEnumeration extends Enumeration<number[]> {
+export class PermutationEnumeration extends AbstractEnumeration<number[]> {
     private p: number[]|null;
     
     // Constructor. WARNING: Don't make n too large.

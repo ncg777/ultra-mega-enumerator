@@ -1,7 +1,7 @@
 import { BitSet } from './../objects/BitSet';
-import { Enumeration } from './../utils/Enumeration';
+import { AbstractEnumeration } from './AbstractEnumeration';
 
-export class BitSetEnumeration extends Enumeration<BitSet> {
+export class BitSetEnumeration extends AbstractEnumeration<BitSet> {
     private current: BitSet|undefined;
     private n: number;
 

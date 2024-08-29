@@ -1,4 +1,4 @@
-import { Enumeration } from './../utils/Enumeration';
+import { AbstractEnumeration } from './AbstractEnumeration';
 import { hashCodeFor } from './../utils/utils';
 
 class State {
@@ -61,7 +61,7 @@ class State {
 /**
  * Adapted into an Enumeration from code by nl.dvberkel.
  */
-export class DyckWordEnumeration extends Enumeration<string> {
+export class DyckWordEnumeration extends AbstractEnumeration<string> {
     private currentState: State | null;
     private readonly symbols = ["(", ")"];
     private readonly target = this.symbols[1] + this.symbols[0];

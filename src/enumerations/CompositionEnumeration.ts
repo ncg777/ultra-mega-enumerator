@@ -1,8 +1,8 @@
-import { Enumeration } from './../utils/Enumeration';
+import { AbstractEnumeration } from './AbstractEnumeration';
 import { Composition } from './../objects/Composition';
 import { BitSetEnumeration } from './BitSetEnumeration';
 
-export class CompositionEnumeration extends Enumeration<Composition> {
+export class CompositionEnumeration extends AbstractEnumeration<Composition> {
     private be: BitSetEnumeration;
     private n: number;
 

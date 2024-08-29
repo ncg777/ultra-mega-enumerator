@@ -1,7 +1,7 @@
-import { Enumeration } from './../utils/Enumeration';
+import { AbstractEnumeration } from './AbstractEnumeration';
 import { DyckWordEnumeration } from './DyckWordEnumeration'; // Assuming this is defined somewhere
 
-export class NGoodPathEnumeration extends Enumeration<number[]> {
+export class NGoodPathEnumeration extends AbstractEnumeration<number[]> {
   
     private dw: DyckWordEnumeration;
 

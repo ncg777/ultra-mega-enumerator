@@ -6,10 +6,8 @@ describe('BitSetEnumeration', () => {
         const n = 3;
         const enumeration = new BitSetEnumeration(n);
         const bitSets: BitSet[] = [];
-
-        // Collect all enumerated BitSets
-        while (enumeration.hasMoreElements()) {
-            bitSets.push(enumeration.nextElement());
+        for(const e of enumeration) {
+            bitSets.push(e);
         }
 
         // Expected BitSet combinations for a size of 3

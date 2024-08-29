@@ -1,8 +1,8 @@
-import { Enumeration } from './../utils/Enumeration';
+import { AbstractEnumeration } from './AbstractEnumeration';
 import { Combination } from './../objects/Combination'; // Assuming the Combination class is defined in Combination.ts
 import { MixedRadixEnumeration } from './MixedRadixEnumeration'; // Assuming the MixedRadixEnumeration class is defined in MixedRadixEnumeration.ts';
 
-export class WordPermutationEnumeration extends Enumeration<number[]> {
+export class WordPermutationEnumeration extends AbstractEnumeration<number[]> {
   private nonzeroIndices: number[];
   private combis: Combination[][];
   private it: MixedRadixEnumeration;

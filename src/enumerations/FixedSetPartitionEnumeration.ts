@@ -1,4 +1,4 @@
-import { Enumeration } from './../utils/Enumeration';
+import { AbstractEnumeration } from './AbstractEnumeration';
 
 /**
  * Efficient Generation of Set Partitions Michael Orlov orlovm@cs.bgu.ac.il March 26, 2002
@@ -6,7 +6,7 @@ import { Enumeration } from './../utils/Enumeration';
  * @author Nicolas Couture-Grenier
  * 
  */
-export class FixedSetPartitionEnumeration extends Enumeration<number[]> {
+export class FixedSetPartitionEnumeration extends AbstractEnumeration<number[]> {
   private kappa: number[];
   private M: number[];
   private n: number;

@@ -1,8 +1,8 @@
-import { Enumeration } from '../utils/Enumeration';
+import { AbstractEnumeration } from './AbstractEnumeration';
 import { Combination } from 'objects/Combination';
 import { CombinationEnumeration } from './CombinationEnumeration';
 
-export class WeakCompositionEnumeration extends Enumeration<number[]> {
+export class WeakCompositionEnumeration extends AbstractEnumeration<number[]> {
   
   private ce: CombinationEnumeration;
   
