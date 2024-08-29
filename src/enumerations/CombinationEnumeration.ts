@@ -18,7 +18,7 @@ export class CombinationEnumeration extends Enumeration<Combination> {
   }
 
   private static next(c: Combination): Combination | null {
-    const n = c.getN();
+    const n = c.size();
 
     let newCombination: Combination | null = null;
 

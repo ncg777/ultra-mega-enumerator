@@ -8,18 +8,12 @@ import { hashCodeFor } from 'utils/utils';
  * Class representing a Combination, which extends BitSet to manage combinations
  * of bits. It includes additional methods specific to combination logic.
  */
-export class Combination extends BitSet implements Comparable<Combination> {
+export class Combination extends BitSet {
     constructor(n: number) {
-        if(n<1){throw new Error("Invalid value of n.")}
         super(n);
     }
-    getN(): number { return this.n;}
 
-    getK(): number {
-        return this.cardinality();
-    }
-
-    asSequence(): number[]{
+    getCombinationAsSequence(): number[]{
         const  o = [];
         for (let i = this.nextSetBit(0); i >= 0; i = this.nextSetBit(i + 1)) {
             o.push(i)
@@ -87,14 +81,14 @@ export class Combination extends BitSet implements Comparable<Combination> {
 
     // Implementing the private partition function with Integer array
     private partitionByIndices(partition: number[]): Combination[] {
-        if (partition.length !== this.getK()) {
+        if (partition.length !== this.cardinality()) {
             throw new Error("Invalid partition size compared to combination size.");
         }
 
         const min = Math.min(...partition);
         const max = Math.max(...partition);
 
-        if (min !== 0 || max > this.getK()) {
+        if (min !== 0 || max > this.cardinality()) {
             throw new Error("Invalid partition values.");
         }
 
@@ -175,27 +169,9 @@ export class Combination extends BitSet implements Comparable<Combination> {
         return c;
     }
 
-    // Compare this Combination with another
-    compareTo(other: Combination): number {
-        if (this.n < other.n) return -1;
-        if (this.n > other.n) return 1;
-
-        const a = new BitSet(this.size());
-        a.or(this);
-        const b = new BitSet(this.size());
-        b.or(other);
-        a.xor(b);
-        const i = a.nextSetBit(0);
-        if (i === -1) {
-            return 0;
-        } else {
-            return b.get(i) ? -1 : 1;
-        }
-    }
-
     // List all combinations that have 1 more element than this one
     static combinationRefinements(c: Combination): Combination[] {
-        const n = c.getN() - c.getK();
+        const n = c.size() - c.cardinality();
         if (n === 0) {
             return [];
         }

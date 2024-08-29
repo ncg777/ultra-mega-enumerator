@@ -14,7 +14,7 @@ export class WeakOrdersEnumeration extends Enumeration<number[]> {
     }
 
     private nextBase(): void {
-        const s: number[] = this.ce.nextElement().asArray();
+        const s: number[] = this.ce.nextElement().getCompositionAsArray();
         this.currentBase = new Array(s.length);
         for (let i = 0; i < s.length; i++) {
             this.currentBase[i] = s[i];

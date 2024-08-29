@@ -24,11 +24,11 @@ export class NBallsInKUrnsEnumeration extends Enumeration<number[]> {
   }
   
   private convertCombination(c: Combination): number[] {
-    const s: number[] = c.asSequence();
+    const s: number[] = c.getCombinationAsSequence();
     s.unshift(-1);
-    s.push(c.getN() + c.getK() - 2);
+    s.push(c.size() + c.cardinality() - 2);
     
-    const o: number[] = new Array(c.getK() + 1);
+    const o: number[] = new Array(c.cardinality() + 1);
     
     for (let i = 1; i < s.length; i++) {
       o[i - 1] = s[i] - s[i - 1] - 1;

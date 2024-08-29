@@ -1,4 +1,4 @@
-export class BitSet implements Comparable<BitSet> {
+export class BitSet {
     protected bits: Set<number>;
     protected n: number;
 
@@ -143,10 +143,6 @@ export class BitSet implements Comparable<BitSet> {
         return clone;
     }
 
-    toArray(): number[] {
-        return Array.from(this.bits);
-    }
-
     toBinaryArray(): number[] {
         return Array.from({ length: this.n }, (_, i) => this.get(i) ? 1 : 0);
     }
@@ -222,19 +218,4 @@ export class BitSet implements Comparable<BitSet> {
         this.n = newSize;
         this.bits = newBits;
     }
-
-    compare(other: BitSet): number {
-        if (!(other instanceof BitSet)) {
-            throw new Error("Can only compare with another BitSet");
-        }
-        for (let i = 0; i < Math.min(this.n, other.n); i++) {
-            const thisBit = this.get(i);
-            const otherBit = other.get(i);
-            if (thisBit !== otherBit) {
-                return thisBit ? 1 : -1;
-            }
-        }
-        return this.n === other.n ? 0 : (this.n > other.n ? 1 : -1);
-    }
 }
-

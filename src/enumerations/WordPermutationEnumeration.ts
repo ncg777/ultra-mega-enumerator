@@ -46,7 +46,7 @@ export class WordPermutationEnumeration extends Enumeration<number[]> {
     for (let i = 0; i < nzsz; i++) {
       const nz = this.nonzeroIndices[i];
       c += rk[nz];
-      this.combis[i] = Combination.generateAll(c, rk[nz]); // Assuming Combination.generate is a static method
+      this.combis[i] = Combination.generateAll(c, rk[nz]);
       sizes[i] = this.combis[i].length;
     }
     this.it = new MixedRadixEnumeration(sizes);
@@ -67,7 +67,7 @@ export class WordPermutationEnumeration extends Enumeration<number[]> {
 
     for (let i = mr.length - 1; i >= 0; i--) {
       const p = this.combis[i][mr[i]];
-      for (let j = p.getN() - 1; j >= 0; j--) {
+      for (let j = p.size() - 1; j >= 0; j--) {
         if (p.get(j)) {
           x[pos[j]] = this.nonzeroIndices[i];
           pos.splice(j, 1); // Remove the position at index j
