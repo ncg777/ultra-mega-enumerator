@@ -1,11 +1,12 @@
-import { Enumeration } from './../interfaces/Enumeration';
+import { Enumeration } from 'utils/Enumeration';
 import { DyckWordEnumeration } from './DyckWordEnumeration'; // Assuming this is defined somewhere
 
-export class NGoodPathEnumeration implements Enumeration<number[]> {
+export class NGoodPathEnumeration extends Enumeration<number[]> {
   
     private dw: DyckWordEnumeration;
 
     constructor(n: number) {
+        super();
         this.dw = new DyckWordEnumeration(n);
     }
 

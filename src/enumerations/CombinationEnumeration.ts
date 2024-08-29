@@ -1,10 +1,11 @@
-import { Enumeration } from '../interfaces/Enumeration';
-import { Combination } from './../utils/Combination'
+import { Enumeration } from 'utils/Enumeration';
+import { Combination } from 'objects/Combination'
 
-export class CombinationEnumeration implements Enumeration<Combination> {
+export class CombinationEnumeration extends Enumeration<Combination> {
   private current: Combination | null;
 
   constructor(n: number, k: number) {
+    super();
     this.current = CombinationEnumeration.first(n, k);
   }
 

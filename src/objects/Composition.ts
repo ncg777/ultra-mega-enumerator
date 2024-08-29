@@ -1,5 +1,5 @@
-import { BitSet } from './BitSet';
-import { Combination } from './Combination';
+import { BitSet } from 'objects/BitSet';
+import { Combination } from 'objects/Combination';
 
 export class Composition extends Combination {
      // Constructor that initializes an empty composition based on the size n

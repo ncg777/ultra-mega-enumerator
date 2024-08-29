@@ -1,12 +1,13 @@
-import { Enumeration } from '../interfaces/Enumeration';
-import { BitSet } from '../utils/BitSet';
-import { Composition } from '../utils/Composition';
+import { Enumeration } from 'utils/Enumeration';
+import { BitSet } from 'objects/BitSet';
+import { Composition } from 'objects/Composition';
 
-export class CompositionEnumeration implements Enumeration<Composition> {
+export class CompositionEnumeration extends Enumeration<Composition> {
     private be: BitSet; // Assuming BitSetEnumeration is equivalent to BitSet for this context
     private n: number;
 
     constructor(n: number) {
+        super()
         if (n < 1) {
             throw new Error("Invalid argument: n must be at least 1.");
         }

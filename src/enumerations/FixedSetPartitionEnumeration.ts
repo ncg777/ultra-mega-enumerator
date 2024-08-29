@@ -1,4 +1,4 @@
-import { Enumeration } from './../interfaces/Enumeration';
+import { Enumeration } from 'utils/Enumeration';
 
 /**
  * Efficient Generation of Set Partitions Michael Orlov orlovm@cs.bgu.ac.il March 26, 2002
@@ -6,7 +6,7 @@ import { Enumeration } from './../interfaces/Enumeration';
  * @author Nicolas Couture-Grenier
  * 
  */
-export class FixedSetPartitionEnumeration implements Enumeration<number[]> {
+export class FixedSetPartitionEnumeration extends Enumeration<number[]> {
   private kappa: number[];
   private M: number[];
   private n: number;
@@ -14,6 +14,7 @@ export class FixedSetPartitionEnumeration implements Enumeration<number[]> {
   private hasNext: boolean = true;
 
   constructor(n: number, k: number) {
+    super();
     this.n = n;
     this.k = k;
     this.kappa = new Array(n).fill(0);

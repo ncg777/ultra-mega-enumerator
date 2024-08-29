@@ -1,7 +1,7 @@
 // SetPartitionEnumeration.ts
-import { Enumeration } from './../interfaces/Enumeration';
+import { Enumeration } from 'utils/Enumeration';
 
-export class SetPartitionEnumeration implements Enumeration<number[]> {
+export class SetPartitionEnumeration extends Enumeration<number[]> {
     private readonly n: number;
     private k: number[];
     private m: number[];

@@ -1,13 +1,14 @@
-import { Enumeration } from './../interfaces/Enumeration';
-import { Combination } from './../utils/Combination';
-import { BitSet } from './../utils/BitSet';
+import { Enumeration } from 'utils/Enumeration';
+import { Combination } from 'objects/Combination';
+import { BitSet } from '../objects/BitSet';
 import { CombinationEnumeration } from './CombinationEnumeration';
 
-export class NBallsInKUrnsEnumeration implements Enumeration<number[]> {
+export class NBallsInKUrnsEnumeration extends Enumeration<number[]> {
   
   private ce: CombinationEnumeration;
   
   constructor(n: number, k: number) {
+    super();
     this.ce = new CombinationEnumeration(n + k - 1, k - 1);
   }
   

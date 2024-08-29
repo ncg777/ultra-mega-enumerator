@@ -1,43 +1,21 @@
 import { Numbers } from 'utils/Numbers';
-import { Enumeration } from './../interfaces/Enumeration';
+import { Enumeration } from 'utils/Enumeration';
 
-export class PermutationEnumeration implements Enumeration<number[]> {
-    private a: number[];
-    private numLeft: number=-1;
-    private total: number;
-
+export class PermutationEnumeration extends Enumeration<number[]> {
+    private p: number[];
+    
     // Constructor. WARNING: Don't make n too large.
     public constructor(n: number) {
+        super();
         if (n < 1) {
             throw new Error("Min 1");
         }
-        this.a = Array.from({ length: n }, (_, i) => i);
-        this.total = Numbers.factorial(n);
-        this.reset();
-    }
-
-    // Reset
-    public reset(): void {
-        for (let i = 0; i < this.a.length; i++) {
-            this.a[i] = i;
+        this.p = Array.from({ length: n }, (_, i) => i);
+        for (let i = 0; i < this.p.length; i++) {
+            this.p[i] = i;
         }
-        this.numLeft = this.total;
     }
 
-    // Return number of permutations not yet generated
-    public getNumLeft(): number {
-        return this.numLeft;
-    }
-
-    // Return total number of permutations
-    public getTotal(): number {
-        return this.total;
-    }
-
-    // Are there more permutations?
-    public hasMore(): boolean {
-        return this.numLeft > 0;
-    }
 
     // Generate next permutation
     private static getNext(a0: number[]): number[] | null {
@@ -74,27 +52,13 @@ export class PermutationEnumeration implements Enumeration<number[]> {
         return a;
     }
 
-    public getNext(): number[] {
-        if (this.numLeft === this.total) {
-            this.numLeft--;
-            return this.a;
-        }
-
-        const next = PermutationEnumeration.getNext(this.a);
-        if (next === null) {
-            throw new Error("No such element");
-        }
-
-        this.a = next;
-        this.numLeft--;
-        return this.a;
+    hasMoreElements(): boolean {
+        return this.p != null;
     }
 
-    public hasMoreElements(): boolean {
-        return this.hasMore();
-    }
-
-    public nextElement(): number[] {
-        return this.getNext();
+    nextElement(): number[] {
+        this.p = PermutationEnumeration.getNext(this.p)!;
+        
+        return this.p;
     }
 }

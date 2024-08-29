@@ -1,16 +1,17 @@
-import { Enumeration } from '../interfaces/Enumeration';
+import { Enumeration } from 'utils/Enumeration';
 
 /**
  * Enumerates all values of the mixed radix base given as a parameter.
  * 
  * @link http://en.wikipedia.org/wiki/Mixed_radix
  */
-export class MixedRadixEnumeration implements Enumeration<number[]> {
+export class MixedRadixEnumeration extends Enumeration<number[]> {
   private base: number[] = [];
   private current: number[] | null=null;
   private isLast: boolean = false;
 
   constructor(base0: number[]) {
+    super();
     this.init(base0);
   }
 

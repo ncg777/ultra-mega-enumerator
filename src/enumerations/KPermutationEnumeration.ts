@@ -1,12 +1,13 @@
-import { Enumeration } from './../interfaces/Enumeration';
+import { Enumeration } from 'utils/Enumeration';
 import { MixedRadixEnumeration } from './MixedRadixEnumeration';
 
-export class KPermutationEnumeration implements Enumeration<Array<number>> {
+export class KPermutationEnumeration extends Enumeration<Array<number>> {
     private mre: MixedRadixEnumeration;
     private n: number;
     private k: number;
 
     constructor(n: number, k: number) {
+        super();
         this.n = n;
         this.k = k;
         const base: number[] = new Array(k);

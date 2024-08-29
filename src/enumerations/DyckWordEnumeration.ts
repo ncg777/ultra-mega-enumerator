@@ -1,4 +1,4 @@
-import { Enumeration } from '../interfaces/Enumeration';
+import { Enumeration } from 'utils/Enumeration';
 import { hashCodeFor } from 'utils/utils';
 
 class State {
@@ -61,13 +61,14 @@ class State {
 /**
  * Adapted into an Enumeration from code by nl.dvberkel.
  */
-export class DyckWordEnumeration implements Enumeration<string> {
+export class DyckWordEnumeration extends Enumeration<string> {
     private currentState: State | null;
     private readonly symbols = ["(", ")"];
     private readonly target = this.symbols[1] + this.symbols[0];
     private readonly replacement = this.symbols[0] + this.symbols[1];
 
     public constructor(nbOfPairs: number) {
+        super();
         this.currentState = this.initialStateOfLength(nbOfPairs * 2);
     }
 

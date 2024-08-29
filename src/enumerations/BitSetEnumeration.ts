@@ -1,7 +1,7 @@
-import { BitSet } from '../utils/BitSet';
-import { Enumeration } from '../interfaces/Enumeration';
+import { BitSet } from 'objects/BitSet';
+import { Enumeration } from 'utils/Enumeration';
 
-export class BitSetEnumeration implements Enumeration<BitSet> {
+export class BitSetEnumeration extends Enumeration<BitSet> {
     private current: BitSet|undefined;
     private n: number;
 
@@ -9,6 +9,7 @@ export class BitSetEnumeration implements Enumeration<BitSet> {
      * @param n the base
      */
     constructor(n: number) {
+        super();
         if (n < 0) {
             throw new Error("Invalid argument: n must be non-negative.");
         }

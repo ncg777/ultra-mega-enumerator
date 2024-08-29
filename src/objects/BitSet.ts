@@ -232,13 +232,5 @@ export class BitSet implements Comparable<BitSet> {
         }
         return this.n === other.n ? 0 : (this.n > other.n ? 1 : -1);
     }
-
-    private *iterSearch(value: boolean): IterableIterator<number> {
-        for (let i = 0; i < this.n; i++) {
-            if (this.get(i) === value) {
-                yield i;
-            }
-        }
-    }
 }
 

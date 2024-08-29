@@ -1,8 +1,8 @@
-import { Enumeration } from '../interfaces/Enumeration';
+import { Enumeration } from 'utils/Enumeration';
 import { CompositionEnumeration } from './CompositionEnumeration';
 import { WordPermutationEnumeration } from './WordPermutationEnumeration';
 
-export class WeakOrdersEnumeration implements Enumeration<number[]> {
+export class WeakOrdersEnumeration extends Enumeration<number[]> {
     private ce: CompositionEnumeration;
     private me: WordPermutationEnumeration;
     private currentBase: number[] = [];
