@@ -1,9 +1,8 @@
-import { Enumeration } from './../utils/Enumeration';
+import { Enumeration } from '../utils/Enumeration';
 import { Combination } from 'objects/Combination';
-import { BitSet } from '../objects/BitSet';
 import { CombinationEnumeration } from './CombinationEnumeration';
 
-export class NBallsInKUrnsEnumeration extends Enumeration<number[]> {
+export class WeakCompositionEnumeration extends Enumeration<number[]> {
   
   private ce: CombinationEnumeration;
   
@@ -24,15 +23,19 @@ export class NBallsInKUrnsEnumeration extends Enumeration<number[]> {
   }
   
   private convertCombination(c: Combination): number[] {
-    const s: number[] = c.getCombinationAsArray();
-    s.unshift(-1);
-    s.push(c.size() + c.cardinality() - 2);
-    
-    const o: number[] = new Array(c.cardinality() + 1);
-    
-    for (let i = 1; i < s.length; i++) {
-      o[i - 1] = s[i] - s[i - 1] - 1;
+    const o:number[] = [];
+    let cnt:number = 0;
+    for(let j=0;j<c.size();j++) {
+      if(c.get(j)) { // is a bar
+        o.push(cnt);
+        cnt=0;
+      } else { // is a star
+        cnt++;
+      }
     }
+    o.push(cnt);
+    
     return o;
+
   }
 }

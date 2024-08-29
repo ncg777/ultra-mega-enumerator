@@ -9,7 +9,8 @@ export class CombinationEnumeration extends Enumeration<Combination> {
     this.current = CombinationEnumeration.first(n, k);
   }
 
-  private static first(n: number, k: number): Combination {
+  private static first(n: number, k: number): Combination|null {
+    if(k>n || n <0 || k<0){return null;}
     const combination = new Combination(n);
     for (let i = 0; i < k; i++) {
       combination.set(i, true);
