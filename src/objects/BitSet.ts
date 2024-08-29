@@ -1,5 +1,5 @@
 export class BitSet implements Comparable<BitSet> {
-    private bits: Set<number>;
+    protected bits: Set<number>;
     protected n: number;
 
     constructor(n: number) {
@@ -8,6 +8,10 @@ export class BitSet implements Comparable<BitSet> {
         }
         this.n = n;
         this.bits = new Set<number>();
+    }
+    
+    public getTrueBits() {
+        return [...this.bits];
     }
 
     compareTo(other: BitSet): number {

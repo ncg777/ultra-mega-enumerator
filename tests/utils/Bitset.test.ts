@@ -1,4 +1,4 @@
-import { BitSet } from '../../src/utils/BitSet';
+import { BitSet } from '../../src/objects/BitSet';
 
 describe('BitSet', () => {
     it('should create a BitSet and set bits correctly', () => {

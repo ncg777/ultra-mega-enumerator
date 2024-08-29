@@ -1,5 +1,5 @@
 {
-  "name": "the_enumerator",
+  "name": "enumerati",
   "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,7 +8,7 @@
     "publish": "yarn build && yarn pack",
     "test": "jest"
   },
-  "repository": "https://github.com/ncg777/the_enumerator.git",
+  "repository": "https://github.com/ncg777/enumerati.git",
   "author": "Nicolas Couture-Grenier <nicolas.couture.grenier@gmail.com>",
   "license": "MIT",
   "devDependencies": {

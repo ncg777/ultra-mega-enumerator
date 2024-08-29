@@ -10,13 +10,13 @@ import { hashCodeFor } from 'utils/utils';
  */
 export class Combination extends BitSet implements Comparable<Combination> {
     constructor(n: number) {
+        if(n<1){throw new Error("Invalid value of n.")}
         super(n);
     }
-    getN(): number { return this.n;}
+    getN(): number { return this.n+1;}
 
-    // Returns the number of selected bits (or elements in the combination)
     getK(): number {
-        return this.cardinality(); // Uses BitSet's cardinality method
+        return this.cardinality()+1;
     }
 
     asSequence(): number[]{
@@ -40,33 +40,6 @@ export class Combination extends BitSet implements Comparable<Combination> {
             }
             return Composition.compositionFromBooleanArray(l); // Return a new Composition instance initialized with the list of boolean values
         }
-    }
-
-    // Intersect this combination with another
-    intersect(other: Combination): Combination {
-        const result = new Combination(this.size());
-        for (let i = 0; i < this.size(); i++) {
-            result.set(i, this.get(i) && other.get(i));
-        }
-        return result;
-    }
-
-    // Subtract another combination from this one
-    minus(other: Combination): Combination {
-        const result = new Combination(this.size());
-        for (let i = 0; i < this.size(); i++) {
-            result.set(i, this.get(i) && !other.get(i));
-        }
-        return result;
-    }
-
-    // Calculate symmetric difference with another combination
-    symmetricDifference(other: Combination): Combination {
-        const result = new Combination(this.size());
-        for (let i = 0; i < this.size(); i++) {
-            result.set(i, this.get(i) !== other.get(i));
-        }
-        return result;
     }
 
     // Rotate the bits in the combination
@@ -149,23 +122,13 @@ export class Combination extends BitSet implements Comparable<Combination> {
 
     // Method to copy from another BitSet if needed
     private copyFrom(bitSet: BitSet): void {
-        for (let i = 0; i < this.size(); i++) {
-            this.set(i, bitSet.get(i));
-        }
+        this.bits = new Set<number>(bitSet.getTrueBits());
     }
 
     public copy(): Combination {
         const o = new Combination(this.n);
         o.copyFrom(this);
         return o;
-    }
-
-    // Hash Code Implementation
-    hashCode(): number {
-        const prime = 31;
-        let result = hashCodeFor(this); // Assuming there's a hashCode in BitSet class
-        result = prime * result + this.n;
-        return result;
     }
 
     // Equals Implementation
@@ -189,7 +152,7 @@ export class Combination extends BitSet implements Comparable<Combination> {
     }
 
 
-    public static generate(n: number, k: number): Combination[] {
+    public static generateAll(n: number, k: number): Combination[] {
         const cnt = Numbers.binomial(n, k);
         const combinations: Combination[] = new Array(cnt);
         const combinationEnumeration = new CombinationEnumeration(n, k);
@@ -251,13 +214,5 @@ export class Combination extends BitSet implements Comparable<Combination> {
             o.push(toAdd);
         }
         return o;
-    }
-
-    // Merge two combinations
-    static merge(a: Combination, b: Combination): Combination {
-        const x = new BitSet(Math.max(a.size(), b.size()));
-        x.or(a);
-        x.or(b);
-        return new Combination(x.size());
-    }   
+    }  
 }

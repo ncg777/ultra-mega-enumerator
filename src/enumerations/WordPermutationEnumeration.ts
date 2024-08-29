@@ -5,7 +5,7 @@ import { MixedRadixEnumeration } from './MixedRadixEnumeration'; // Assuming the
 export class WordPermutationEnumeration extends Enumeration<number[]> {
   private nonzeroIndices: number[];
   private combis: Combination[][];
-  private it: Enumeration<number[]>;
+  private it: MixedRadixEnumeration;
   private n: number;
 
   /**
@@ -19,6 +19,7 @@ export class WordPermutationEnumeration extends Enumeration<number[]> {
    * @param rk Integer[]
    */
   constructor(rk: number[]) {
+    super();
     if (rk == null) {
       throw new Error("null array");
     }
@@ -45,7 +46,7 @@ export class WordPermutationEnumeration extends Enumeration<number[]> {
     for (let i = 0; i < nzsz; i++) {
       const nz = this.nonzeroIndices[i];
       c += rk[nz];
-      this.combis[i] = Combination.generate(c, rk[nz]); // Assuming Combination.generate is a static method
+      this.combis[i] = Combination.generateAll(c, rk[nz]); // Assuming Combination.generate is a static method
       sizes[i] = this.combis[i].length;
     }
     this.it = new MixedRadixEnumeration(sizes);
