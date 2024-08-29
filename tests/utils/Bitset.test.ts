@@ -226,5 +226,86 @@ describe('BitSet', () => {
         expect(intersection.get(2)).toBe(true);
         expect(intersection.get(3)).toBe(false);
     });
+
+    it('should perform UNION operation correctly', () => {
+        const bitset1 = new BitSet(5);
+        const bitset2 = new BitSet(5);
+        
+        bitset1.set(0);
+        bitset1.set(1);
+        bitset2.set(2);
+        bitset2.set(3);
+        
+        const union = bitset1.union(bitset2);
+        
+        expect(union.get(0)).toBe(true);
+        expect(union.get(1)).toBe(true);
+        expect(union.get(2)).toBe(true);
+        expect(union.get(3)).toBe(true);
+        expect(union.get(4)).toBe(false);
+    });
+
+    it('should perform MINUS operation correctly', () => {
+        const bitset1 = new BitSet(5);
+        const bitset2 = new BitSet(5);
+        
+        bitset1.set(0);
+        bitset1.set(2);
+        bitset2.set(2);
+        
+        const difference = bitset1.minus(bitset2);
+        
+        expect(difference.get(0)).toBe(true); // 0 should remain
+        expect(difference.get(2)).toBe(false); // 2 should be removed
+    });
+
+    it('should handle MINUS with empty BitSet', () => {
+        const bitset1 = new BitSet(5);
+        const bitset2 = new BitSet(5);
+        
+        bitset1.set(0);
+        bitset1.set(2);
+        
+        const difference = bitset1.minus(bitset2);
+        
+        expect(difference.get(0)).toBe(true);
+        expect(difference.get(2)).toBe(true); // Should remain, as bitset2 is empty
+    });
+
+    it('should rotate bits correctly', () => {
+        let bitset = new BitSet(8);
+        bitset.set(1);
+        bitset.set(2);
+        bitset.set(3);
+        bitset.set(5);
+        
+        bitset = bitset.rotate(2); // Rotate right by 2
+            
+        expect(bitset.get(0)).toBe(false);
+        expect(bitset.get(1)).toBe(false);
+        expect(bitset.get(2)).toBe(false);
+        expect(bitset.get(3)).toBe(true);
+        expect(bitset.get(4)).toBe(true);
+        expect(bitset.get(5)).toBe(true);
+        expect(bitset.get(6)).toBe(false);
+        expect(bitset.get(7)).toBe(true);
+    });
+
+    it('should rotate bits correctly with negative values', () => {
+        let bitset = new BitSet(8);
+        bitset.set(0);
+        bitset.set(1);
+        
+        bitset = bitset.rotate(-1); // Rotate left by 1
+        
+        expect(bitset.get(0)).toBe(true);
+        expect(bitset.get(1)).toBe(false);
+        expect(bitset.get(2)).toBe(false);
+        expect(bitset.get(3)).toBe(false);
+        expect(bitset.get(4)).toBe(false);
+        expect(bitset.get(5)).toBe(false);
+        expect(bitset.get(6)).toBe(false);
+        expect(bitset.get(7)).toBe(true);
+    });
 });
 

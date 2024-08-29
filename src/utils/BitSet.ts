@@ -1,26 +1,5 @@
-/**
- * This class represents a mutable set of bits, with methods for bit manipulation,
- * such as setting, clearing, flipping, and querying bits. The BitSet can handle
- * operations such as bitwise AND, OR, and XOR with other BitSet instances. 
- * It provides functionality to navigate through bits, including finding the next 
- * and previous set or clear bits. The BitSet can also convert its contents to 
- * a binary string representation, and it can calculate its cardinality (the 
- * number of set bits).
- * 
- * The class implements the Comparable interface to allow comparison between 
- * different BitSet instances based on their sizes and bit values. It also 
- * provides methods to create copies of the BitSet and to convert the bit 
- * representation to different formats.
- * 
- * Usage:
- * 
- * const bitSet = new BitSet(10);
- * bitSet.set(2);
- * bitSet.flip(3);
- * console.log(bitSet.toString()); // "0011000000"
- */
-export class BitSet implements Comparable<BitSet>  {
-    private bits: boolean[];
+export class BitSet implements Comparable<BitSet> {
+    private bits: Set<number>;
     protected n: number;
 
     constructor(n: number) {
@@ -28,53 +7,55 @@ export class BitSet implements Comparable<BitSet>  {
             throw new Error("Invalid BitSet size.");
         }
         this.n = n;
-        this.bits = [];
-        for(let i=0;i<this.n;i++){this.bits[i]=false;}
+        this.bits = new Set<number>();
     }
-    
+
     compareTo(other: BitSet): number {
-        // Compare sizes
         if (this.n < other.n) return -1;
         if (this.n > other.n) return 1;
 
-        // Compare bits if sizes are equal
-        for (let i = 0; i < this.bits.length; i++) {
-            if (this.get(i) < other.get(i)) return -1;
-            if (this.get(i) > other.get(i)) return 1;
+        for (let i = 0; i < this.n; i++) {
+            const thisBit = this.get(i);
+            const otherBit = other.get(i);
+            if (thisBit < otherBit) return -1;
+            if (thisBit > otherBit) return 1;
         }
-        
-        // If they are equal
-        return 0;
-    }
 
-    private static wordSize(): number {
-        return Number.MAX_SAFE_INTEGER.toString(2).length;
+        return 0;
     }
 
     size(): number {
         return this.n;
     }
+
     get(bitIndex: number): boolean {
         if (bitIndex >= this.n) {
             throw new Error("Index out of bounds");
         }
-        return (this.bits[bitIndex]);
+        return this.bits.has(bitIndex);
     }
 
     set(bitIndex: number, value: boolean = true): void {
         if (bitIndex >= this.n) {
             throw new Error("Index out of bounds");
         }
-        this.bits[bitIndex] = value;
-        
+        if (value) {
+            this.bits.add(bitIndex);
+        } else {
+            this.bits.delete(bitIndex);
+        }
     }
 
     clear(bitIndex: number): void {
-        this.set(bitIndex,false)
+        this.bits.delete(bitIndex);
     }
 
     flip(bitIndex: number): void {
-        this.set(bitIndex, !this.get(bitIndex))
+        if (this.bits.has(bitIndex)) {
+            this.bits.delete(bitIndex);
+        } else {
+            this.bits.add(bitIndex);
+        }
     }
 
     nextSetBit(fromIndex: number): number {
@@ -122,44 +103,44 @@ export class BitSet implements Comparable<BitSet>  {
     }
 
     cardinality(): number {
-        // Count the number of set bits (true values)
-        return this.bits.filter(bit => bit).length;
+        return this.bits.size;
     }
 
     and(bitSet: BitSet): void {
-        this.bitwiseOperation(bitSet, (a: boolean, b: boolean) => a && b);
+        this.bits = new Set<number>(
+            [...this.bits].filter(bit => bitSet.get(bit))
+        );
     }
-    
+
     or(bitSet: BitSet): void {
-        this.bitwiseOperation(bitSet, (a: boolean, b: boolean) => a || b);
+        this.bits = new Set<number>(
+            [...this.bits, ...Array.from(bitSet.bits)]
+        );
     }
-    
+
     xor(bitSet: BitSet): void {
-        this.bitwiseOperation(bitSet, (a: boolean, b: boolean) => a !== b);
+        const union = new Set<number>([...this.bits, ...Array.from(bitSet.bits)]);
+        const intersection = new Set<number>(
+            [...this.bits].filter(bit => bitSet.get(bit))
+        );
+
+        this.bits = new Set<number>(
+            [...union].filter(bit => !intersection.has(bit))
+        );
     }
-    
-    private bitwiseOperation(other: BitSet, operation: (a: boolean, b: boolean) => boolean): void {
-        if (this.n !== other.n) {
-            throw new Error("BitSets must be of the same size");
-        }
-        for (let i = 0; i < this.n; i++) {
-            this.set(i, operation(this.get(i), other.get(i)));
-        }
-    }
-    
 
     equals(obj: any): boolean {
-        return obj instanceof BitSet && this.bits.every((word, i) => word === obj.bits[i]);
+        return obj instanceof BitSet && this.n === obj.n && [...this.bits].every(bit => obj.get(bit));
     }
 
     copy(): BitSet {
         const clone = new BitSet(this.n);
-        clone.bits = [...this.bits];
+        this.bits.forEach(bit => clone.set(bit));
         return clone;
     }
 
     toArray(): number[] {
-        return Array.from(this.iterSearch(true));
+        return Array.from(this.bits);
     }
 
     toBinaryArray(): number[] {
@@ -171,72 +152,71 @@ export class BitSet implements Comparable<BitSet>  {
         while (k < 0) k += this.n;
         while (k >= this.n) k -= this.n;
         const rotated = new BitSet(this.n);
-        for (let i = 0; i < this.n; i++) {
-            rotated.set(i, this.get((i - k + this.n) % this.n));
-        }
+        this.bits.forEach(bit => rotated.set((bit + k +         this.n) % this.n));
         return rotated;
     }
 
     union(other: BitSet): BitSet {
         const result = new BitSet(this.n);
-        for (let i = 0; i < this.n; i++) {
-            result.set(i, this.get(i) || other.get(i));
-        }
+        other.bits.forEach(bit => result.set(bit));
+        this.bits.forEach(bit => result.set(bit));
         return result;
     }
 
     intersection(other: BitSet): BitSet {
-        if(this.size() != other.size()){throw new Error("BitSets sizes don't match.");}
         const result = new BitSet(this.n);
-        for (let i = 0; i < this.n; i++) {
-            result.set(i, this.get(i) && other.get(i));
-        }
+        this.bits.forEach(bit => {
+            if (other.get(bit)) {
+                result.set(bit);
+            }
+        });
         return result;
     }
 
     minus(other: BitSet): BitSet {
-        if(this.size() != other.size()){throw new Error("BitSets sizes don't match.");}
         const result = new BitSet(this.n);
-        for (let i = 0; i < this.n; i++) {
-            result.set(i, this.get(i) && !other.get(i));
-        }
+        this.bits.forEach(bit => {
+            if (!other.get(bit)) {
+                result.set(bit);
+            }
+        });
         return result;
     }
 
     static bitSetFromNumberArray(bitArray: number[]): BitSet {
         const bs = new BitSet(bitArray.length);
-        bitArray.forEach((bit, i) => bs.set(i, bit!=0));
-        return bs;
-    }
-
-    static bitSetFromBooleanArray(bitArray: boolean[]): BitSet {
-        const bs = new BitSet(bitArray.length);
-        bitArray.forEach((bit, i) => bs.set(i, bit));
+        bitArray.forEach((bit, i) => bs.set(i, bit === 1));
         return bs;
     }
 
     static fromBitString(bitString: string): BitSet {
-        return BitSet.bitSetFromBooleanArray(Array.from(bitString).map((c => c == "1" ? true:false)));
+        const na = [];
+        for (let i = 0; i < bitString.length; i++) {
+            na.push(bitString.charAt(i) === "1" ? 1 : 0);
+        }
+        return BitSet.bitSetFromNumberArray(na);
     }
 
     intersects(bitSet: BitSet): boolean {
-        return !this.intersection(bitSet).isEmpty();    
+        return Array.from(this.bits).some(bit => bitSet.get(bit));
     }
 
     isEmpty(): boolean {
-        return this.cardinality()==0;
+        return this.bits.size === 0;
     }
 
     resize(newSize: number): void {
         if (newSize < 1) {
             throw new Error("Invalid BitSet size");
         }
-        const m = Math.min(this.n, newSize);
-        const a = [];
-        for(let i=0;i<m;i++){a.push(this.get(i));}
-        for(let i=m;i<newSize;i++){a.push(false);}
-        this.bits=a;
-        this.n=newSize;
+        const newBits = new Set<number>();
+        this.bits.forEach(bit => {
+            if (bit < newSize) {
+                newBits.add(bit);
+            }
+        });
+        this.n = newSize;
+        this.bits = newBits;
     }
 
     compare(other: BitSet): number {
@@ -244,13 +224,15 @@ export class BitSet implements Comparable<BitSet>  {
             throw new Error("Can only compare with another BitSet");
         }
         for (let i = 0; i < Math.min(this.n, other.n); i++) {
-            if (this.get(i) !== other.get(i)) {
-                return this.get(i) ? 1 : -1;
+            const thisBit = this.get(i);
+            const otherBit = other.get(i);
+            if (thisBit !== otherBit) {
+                return thisBit ? 1 : -1;
             }
         }
         return this.n === other.n ? 0 : (this.n > other.n ? 1 : -1);
     }
-    
+
     private *iterSearch(value: boolean): IterableIterator<number> {
         for (let i = 0; i < this.n; i++) {
             if (this.get(i) === value) {
