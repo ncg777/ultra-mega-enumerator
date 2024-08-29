@@ -1,20 +1,23 @@
-import { Enumeration } from './../utils/Enumeration';
+import { Enumeration } from '../utils/Enumeration';
 import { CompositionEnumeration } from './CompositionEnumeration';
 import { WordPermutationEnumeration } from './WordPermutationEnumeration';
 
-export class WeakOrdersEnumeration extends Enumeration<number[]> {
-    private ce: CompositionEnumeration;
-    private me: WordPermutationEnumeration;
+export class WeakOrderEnumeration extends Enumeration<number[]> {
+    private ce: CompositionEnumeration|null = null;
+    private me: WordPermutationEnumeration|null = null;
     private currentBase: number[] = [];
-
+    private zerocase: number[]|null = [];
     constructor(n: number) {
         super();
-        this.ce = new CompositionEnumeration(n);
-        this.nextBase();
-        this.me = new WordPermutationEnumeration(this.currentBase);
+        if(n>0) {
+            this.ce = new CompositionEnumeration(n);
+            this.nextBase();
+            this.me = new WordPermutationEnumeration(this.currentBase);
+        }
     }
 
     private nextBase(): void {
+        if(this.ce === null) throw new Error("The unexpected has happened.")
         const s: number[] = this.ce.nextElement().getCompositionAsArray();
         this.currentBase = new Array(s.length);
         for (let i = 0; i < s.length; i++) {
@@ -23,10 +26,18 @@ export class WeakOrdersEnumeration extends Enumeration<number[]> {
     }
 
     hasMoreElements(): boolean {
+        if(this.ce === null||this.me === null) {
+            return this.zerocase!=null;
+          }
         return this.ce.hasMoreElements() || this.me.hasMoreElements();
     }
 
     nextElement(): number[] {
+        if(this.ce === null || this.me === null) {
+            if(this.zerocase == null) throw new Error("No such element.");
+            this.zerocase=null;
+            return [];
+        }
         if (!this.me.hasMoreElements()) {
             if (!this.ce.hasMoreElements()) {
                 throw new Error("No such element");
