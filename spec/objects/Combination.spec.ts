@@ -1,6 +1,6 @@
 
 import { Combination } from '../../src/objects/Combination';
-import { Numbers } from '../../src/utils/Numbers';
+import { Numbers } from '../../src/Numbers';
 
 describe('Combination', () => {
     describe('Constructor and Size', () => {

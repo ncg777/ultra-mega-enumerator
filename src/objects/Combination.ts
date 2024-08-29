@@ -1,6 +1,6 @@
 import { CombinationEnumeration } from './../enumerations/CombinationEnumeration';
 import { BitSet } from './BitSet';
-import { Numbers } from './../utils/Numbers';
+import { Numbers } from '../Numbers';
 
 /**
  * Class representing a Combination, which extends BitSet to manage combinations

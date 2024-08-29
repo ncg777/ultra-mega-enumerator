@@ -1,5 +1,4 @@
 import { AbstractEnumeration } from './AbstractEnumeration';
-import { hashCodeFor } from './../utils/utils';
 
 class State {
     private readonly parent: State | null;
@@ -42,13 +41,6 @@ class State {
         return this.index === state.index &&
             (this.parent ? this.parent.equals(state.parent) : state.parent == null) &&
             this.word === state.word;
-    }
-
-    public hashCode(): number {
-        let result = this.parent ? this.parent.hashCode() : 0;
-        result = 31 * result + (this.word ? hashCodeFor(this.word) : 0);
-        result = 31 * result + this.index;
-        return result;
     }
 
     public toString(): string {
