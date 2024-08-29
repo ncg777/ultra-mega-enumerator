@@ -1,4 +1,4 @@
-import { Numbers } from './../../src/utils/Numbers';
+import { Numbers } from '../../src/utils/Numbers';
 
 describe('Numbers Class Tests', () => {
   

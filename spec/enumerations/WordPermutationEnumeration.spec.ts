@@ -1,18 +1,16 @@
-// d:\Repos\enumerati\src\enumerations\WordPermutationEnumeration.test.ts
-import { expect } from 'chai';
-import { WordPermutationEnumeration } from './../../src/enumerations/WordPermutationEnumeration';
+import { WordPermutationEnumeration } from '../../src/enumerations/WordPermutationEnumeration';
 
 describe('WordPermutationEnumeration', () => {
     it('should return an empty array for rk = []', () => {
         const enumeration = new WordPermutationEnumeration([]);
-        expect(enumeration.nextElement()).to.deep.equal([]);
-        expect(enumeration.hasMoreElements()).to.equal(false);
+        expect(enumeration.nextElement()).toEqual([]);
+        expect(enumeration.hasMoreElements()).toEqual(false);
     });
 
     it('should return [0] for rk = [1]', () => {
         const enumeration = new WordPermutationEnumeration([1]);
-        expect(enumeration.nextElement()).to.deep.equal([0]);
-        expect(enumeration.hasMoreElements()).to.equal(false);
+        expect(enumeration.nextElement()).toEqual([0]);
+        expect(enumeration.hasMoreElements()).toEqual(false);
     });
 
     it('should correctly enumerate permutations for rk = [1, 2, 3]', () => {
@@ -83,9 +81,9 @@ describe('WordPermutationEnumeration', () => {
 
         for (const expected of expectedResults) {
             const result = enumeration.nextElement();
-            expect(result).to.deep.equal(expected);
+            expect(result).toEqual(expected);
         }
-        expect(enumeration.hasMoreElements()).to.equal(false);
+        expect(enumeration.hasMoreElements()).toEqual(false);
     });
 });
 

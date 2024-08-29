@@ -1,9 +1,9 @@
 import { Enumeration } from './../utils/Enumeration';
-import { BitSet } from './../objects/BitSet';
 import { Composition } from './../objects/Composition';
+import { BitSetEnumeration } from './BitSetEnumeration';
 
 export class CompositionEnumeration extends Enumeration<Composition> {
-    private be: BitSet; // Assuming BitSetEnumeration is equivalent to BitSet for this context
+    private be: BitSetEnumeration;
     private n: number;
 
     constructor(n: number) {
@@ -11,7 +11,7 @@ export class CompositionEnumeration extends Enumeration<Composition> {
         if (n < 1) {
             throw new Error("Invalid argument: n must be at least 1.");
         }
-        this.be = new BitSet(n - 1);
+        this.be = new BitSetEnumeration(n - 1);
         this.n = n;
     }
 
@@ -19,10 +19,10 @@ export class CompositionEnumeration extends Enumeration<Composition> {
         if (!this.hasMoreElements()) {
             throw new Error("No such element");
         }
-        return Composition.compositionFromBitSet(this.be); // Simplified for context
+        return Composition.compositionFromBitSet(this.be.nextElement());
     }
 
     hasMoreElements(): boolean {
-        return this.be.cardinality() < Math.pow(2, this.be.size());
+        return this.be.hasMoreElements();
     }
 }

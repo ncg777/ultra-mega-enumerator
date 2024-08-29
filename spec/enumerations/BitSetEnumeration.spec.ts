@@ -1,6 +1,5 @@
-import { expect } from 'chai';
-import { BitSet } from './../../src/objects/BitSet';
-import { BitSetEnumeration } from './../../src/enumerations/BitSetEnumeration';
+import { BitSet } from '../../src/objects/BitSet';
+import { BitSetEnumeration } from '../../src/enumerations/BitSetEnumeration';
 
 describe('BitSetEnumeration', () => {
     it('should correctly enumerate all BitSet combinations of size 3', () => {
@@ -29,12 +28,12 @@ describe('BitSetEnumeration', () => {
         const actualTrueBits = bitSets.map(bs => [...bs.getTrueBits()].sort());
         const expectedTrueBits = expectedResults.map(bs => [...bs.getTrueBits()].sort());
 
-        expect(actualTrueBits).to.have.length(expectedTrueBits.length);
-        expect(actualTrueBits).to.deep.equal(expectedTrueBits);
+        expect(actualTrueBits.length).toBe(expectedTrueBits.length);
+        expect(actualTrueBits).toEqual(expectedTrueBits);
     });
 
     it('should throw error when trying to enumerate with negative size', () => {
-        expect(() => new BitSetEnumeration(-1)).to.throw(Error);
+        expect(() => new BitSetEnumeration(-1)).toThrow(Error);
     });
 
     it('should not have more elements at the end of enumeration', () => {
@@ -46,7 +45,7 @@ describe('BitSetEnumeration', () => {
         enumeration.nextElement();
         enumeration.nextElement();
 
-        expect(enumeration.hasMoreElements()).to.be.false; // Should have no more elements
+        expect(enumeration.hasMoreElements()).toEqual(false);
     });
 
     it('should correctly return the last element when enumerating', () => {
@@ -58,7 +57,7 @@ describe('BitSetEnumeration', () => {
             lastElement = enumeration.nextElement();
         }
 
-        expect([...lastElement?.getTrueBits()!].sort()).to.deep.equal([0, 1]);
+        expect([...lastElement?.getTrueBits()!].sort()).toEqual([0, 1]);
     });
 
     it('should reset after reaching the end of enumerating', () => {
@@ -71,10 +70,10 @@ describe('BitSetEnumeration', () => {
         }
 
         // Check that it doesn't have more elements
-        expect(enumeration.hasMoreElements()).to.be.false;
+        expect(enumeration.hasMoreElements()).toEqual(false);
 
         // Create a new enumeration instance to reset
         const newEnumeration = new BitSetEnumeration(n);
-        expect(newEnumeration.hasMoreElements()).to.be.true; // Should have elements again
+        expect(newEnumeration.hasMoreElements()).toEqual(true); // Should have elements again
     });
 });
