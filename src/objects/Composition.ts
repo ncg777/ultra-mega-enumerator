@@ -1,5 +1,5 @@
-import { BitSet } from 'objects/BitSet';
-import { Combination } from 'objects/Combination';
+import { BitSet } from './BitSet';
+import { Combination } from './Combination';
 
 export class Composition extends Combination {
     constructor(n: number) {
@@ -17,7 +17,20 @@ export class Composition extends Combination {
         }
         return instance;
     }
+    public static compositionFromCombination(comb:Combination) {
+        const nsb = comb.nextSetBit(0);
+        if (nsb === -1) {
+            return new Composition(comb.size()); // Assuming Composition constructor accepts a number
+        } else {
+            const t = comb.rotate(-nsb); // Rotate by the negative index of the first set bit
+            const l: boolean[] = [];
+            for (let i = 1; i < comb.size(); i++) {
+                l.push(t.get(i)); // Collect bits starting from index 1
+            }
+            return Composition.compositionFromBooleanArray(l); // Return a new Composition instance initialized with the list of boolean values
+        }
 
+    }
     // Creating a Composition from a BitSet
     public static compositionFromBitSet(x: BitSet): Composition {
         const instance = new Composition(x.size());

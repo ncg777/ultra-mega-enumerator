@@ -54,7 +54,6 @@ export class MixedRadixEnumeration extends Enumeration<number[]> {
     }
     this.current = [...result];
     this.currentIndex++;
-    console.log(result);
     return result;
   }
 }

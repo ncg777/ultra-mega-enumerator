@@ -1,6 +1,6 @@
-import { Enumeration } from 'utils/Enumeration';
-import { BitSet } from 'objects/BitSet';
-import { Composition } from 'objects/Composition';
+import { Enumeration } from './../utils/Enumeration';
+import { BitSet } from './../objects/BitSet';
+import { Composition } from './../objects/Composition';
 
 export class CompositionEnumeration extends Enumeration<Composition> {
     private be: BitSet; // Assuming BitSetEnumeration is equivalent to BitSet for this context

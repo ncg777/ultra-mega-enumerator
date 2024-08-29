@@ -1,7 +1,6 @@
-import { CombinationEnumeration } from 'enumerations/CombinationEnumeration';
-import { BitSet } from 'objects/BitSet';
-import { Composition } from './Composition';
-import { Numbers } from 'utils/Numbers';
+import { CombinationEnumeration } from './../enumerations/CombinationEnumeration';
+import { BitSet } from './BitSet';
+import { Numbers } from './../utils/Numbers';
 
 /**
  * Class representing a Combination, which extends BitSet to manage combinations
@@ -12,27 +11,12 @@ export class Combination extends BitSet {
         super(n);
     }
 
-    getCombinationAsSequence(): number[]{
+    getCombinationAsArray(): number[]{
         const  o = [];
         for (let i = this.nextSetBit(0); i >= 0; i = this.nextSetBit(i + 1)) {
             o.push(i)
         }
         return o;
-    }
-
-    // Inside the Combination class
-    public getComposition(): Composition {
-        const nsb = this.nextSetBit(0);
-        if (nsb === -1) {
-            return new Composition(this.n); // Assuming Composition constructor accepts a number
-        } else {
-            const t = this.rotate(-nsb); // Rotate by the negative index of the first set bit
-            const l: boolean[] = [];
-            for (let i = 1; i < this.n; i++) {
-                l.push(t.get(i)); // Collect bits starting from index 1
-            }
-            return Composition.compositionFromBooleanArray(l); // Return a new Composition instance initialized with the list of boolean values
-        }
     }
 
     // Rotate the bits in the combination
@@ -155,17 +139,6 @@ export class Combination extends BitSet {
         }
         
         return combinations;
-    }
-    
-    // Create a Combination from a binary Sequence
-    static combinationFromBinarySequence(s: boolean[]): Combination {
-        const c = new Combination(s.length);
-        for (let i = 0; i < s.length; i++) {
-            if (s[i]) {
-                c.set(i, true);
-            }
-        }
-        return c;
     }
 
     // List all combinations that have 1 more element than this one

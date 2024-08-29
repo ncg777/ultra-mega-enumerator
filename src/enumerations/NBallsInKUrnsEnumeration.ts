@@ -24,7 +24,7 @@ export class NBallsInKUrnsEnumeration extends Enumeration<number[]> {
   }
   
   private convertCombination(c: Combination): number[] {
-    const s: number[] = c.getCombinationAsSequence();
+    const s: number[] = c.getCombinationAsArray();
     s.unshift(-1);
     s.push(c.size() + c.cardinality() - 2);
     

@@ -1,5 +1,5 @@
-import { Enumeration } from 'utils/Enumeration';
-import { Combination } from 'objects/Combination'
+import { Enumeration } from './../utils/Enumeration';
+import { Combination } from './../objects/Combination'
 
 export class CombinationEnumeration extends Enumeration<Combination> {
   private current: Combination | null;
