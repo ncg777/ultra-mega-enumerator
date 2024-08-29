@@ -22,7 +22,6 @@ describe('FixedSetPartitionEnumeration', () => {
 
         for (const expected of expectedResults) {
             const result = enumeration.nextElement();
-            console.log(expected + " vs " + result);
             expect(result).toEqual(expected);
         }
         expect(enumeration.hasMoreElements()).toEqual(false);

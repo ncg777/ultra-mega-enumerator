@@ -26,18 +26,13 @@ export class KPermutationEnumeration extends Enumeration<Array<number>> {
             throw new Error("No such element");
         }
         const m = this.mre.nextElement();
-        const o: Array<number> = [];
-        const l: Array<number> = [];
-
-        for (let i = 0; i < this.n; i++) {
-            l.push(i);
+        const o:number[] = []
+        const l:number[] = []
+        for(let i=0;i<this.n;i++){l.push(i);}
+        for(let i=0;i<this.k;i++){
+            o.push(l[m[i]]); 
+            l.splice(l.findIndex((x) => x === m[i]),1);
         }
-
-        for (let i = 0; i < this.k; i++) {
-            o.push(l[m[i]]);
-            l.splice(m[i], 1); // Remove the used element
-        }
-
         return o;
     }
 }

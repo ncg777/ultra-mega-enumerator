@@ -8,7 +8,6 @@ import { Enumeration } from './../utils/Enumeration';
 export class MixedRadixEnumeration extends Enumeration<number[]> {
   private base: number[] = [];
   private current: number[] | null=null;
-  private isLast: boolean = false;
   private currentIndex:number = -1;
   private total:number = -1;
 
