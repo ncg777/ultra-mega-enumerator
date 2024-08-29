@@ -203,16 +203,20 @@ export class BitSet implements Comparable<BitSet>  {
         return result;
     }
 
-    static bitSetFromBinaryArray(bitArray: number[]): BitSet {
+    static bitSetFromNumberArray(bitArray: number[]): BitSet {
         const bs = new BitSet(bitArray.length);
-        bitArray.forEach((bit, i) => bs.set(i, bit === 1));
+        bitArray.forEach((bit, i) => bs.set(i, bit!=0));
+        return bs;
+    }
+
+    static bitSetFromBooleanArray(bitArray: boolean[]): BitSet {
+        const bs = new BitSet(bitArray.length);
+        bitArray.forEach((bit, i) => bs.set(i, bit));
         return bs;
     }
 
     static fromBitString(bitString: string): BitSet {
-        const bs = new BitSet(bitString.length);
-        Array.from(bitString).forEach((char, i) => bs.set(bs.n - (i + 1), char === "1"));
-        return bs;
+        return BitSet.bitSetFromBooleanArray(Array.from(bitString).map((c => c == "1" ? true:false)));
     }
 
     intersects(bitSet: BitSet): boolean {
@@ -227,10 +231,12 @@ export class BitSet implements Comparable<BitSet>  {
         if (newSize < 1) {
             throw new Error("Invalid BitSet size");
         }
-        const newBits = Array(Math.ceil(newSize / BitSet.wordSize())).fill(0);
-        this.bits.forEach((word, i) => newBits[i] = word);
-        this.n = newSize;
-        this.bits = newBits;
+        const m = Math.min(this.n, newSize);
+        const a = [];
+        for(let i=0;i<m;i++){a.push(this.get(i));}
+        for(let i=m;i<newSize;i++){a.push(false);}
+        this.bits=a;
+        this.n=newSize;
     }
 
     compare(other: BitSet): number {
