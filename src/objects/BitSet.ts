@@ -3,7 +3,7 @@ export class BitSet {
     protected n: number;
 
     constructor(n: number) {
-        if (n < 1) {
+        if (n < 0) {
             throw new Error("Invalid BitSet size.");
         }
         this.n = n;

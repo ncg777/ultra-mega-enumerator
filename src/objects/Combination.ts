@@ -55,7 +55,11 @@ export class Combination extends BitSet {
         });
         return combination;
     }
-
+    public static combinationFromBitSet(x: BitSet): Combination {
+        const instance = new Combination(x.size());
+        instance.copyFrom(x)
+        return instance;
+    }
     // Implementing the partition function that accepts a sequence
     partition(sequence: number[]): Combination[] {
         const partitionArray = sequence.map(i => i) as number[];
@@ -157,9 +161,7 @@ export class Combination extends BitSet {
             const b = new BitSet(c.size());
             b.or(c);
             b.set(k++);
-            const toAdd = new Combination(b.size());
-            toAdd.copyFrom(b);
-            o.push(toAdd);
+            o.push(Combination.combinationFromBitSet(b));
         }
         return o;
     }  

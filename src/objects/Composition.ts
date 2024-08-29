@@ -9,7 +9,7 @@ export class Composition extends Combination {
     getSum() {return this.size()+1;}
     // Creating a Composition from a boolean array
     public static compositionFromBooleanArray(comp: boolean[]): Composition {
-        const instance = new Composition(comp.length);
+        const instance = new Composition(comp.length+1);
         for (let i = 0; i < instance.n; i++) {
             if (comp[i]) {
                 instance.set(i, true);
@@ -20,20 +20,20 @@ export class Composition extends Combination {
     public static compositionFromCombination(comb:Combination) {
         const nsb = comb.nextSetBit(0);
         if (nsb === -1) {
-            return new Composition(comb.size()); // Assuming Composition constructor accepts a number
+            return new Composition(comb.size());
         } else {
-            const t = comb.rotate(-nsb); // Rotate by the negative index of the first set bit
+            const t = comb.rotate(-nsb); 
             const l: boolean[] = [];
             for (let i = 1; i < comb.size(); i++) {
-                l.push(t.get(i)); // Collect bits starting from index 1
+                l.push(t.get(i));
             }
-            return Composition.compositionFromBooleanArray(l); // Return a new Composition instance initialized with the list of boolean values
+            return Composition.compositionFromBooleanArray(l);
         }
 
     }
-    // Creating a Composition from a BitSet
+    
     public static compositionFromBitSet(x: BitSet): Composition {
-        const instance = new Composition(x.size());
+        const instance = new Composition(x.size()+1);
         for (let i = 0; i < x.size(); i++) {
             if (x.get(i)) {
                 instance.set(i, true);
@@ -54,10 +54,11 @@ export class Composition extends Combination {
             }
         }
         result.push(count); // Push the last segment
+
         return result;
     }
 
-    asCombination(): Combination {
+    getCompositionAsCombination(): Combination {
         const o = new Combination(this.n + 1);
         o.set(0);
         for (let i = 1; i < this.n + 1; i++) {
@@ -107,21 +108,15 @@ export class Composition extends Combination {
 
 
     toString(): string {
-        return this.getCompositionAsArray().toString();
+        return "{"+this.getCompositionAsArray().join(",") + "}";
     }
 
-    static compositionRefinements(co: Composition): Composition[] | null {
+    static compositionRefinements(co: Composition): Composition[] {
         const c = Combination.combinationRefinements(co);
-        if (c == null) {
-            return null;
-        }
-        const o: Composition[] = new Array<Composition>(c.length);
-        for (let i = 0; i < c.length; i++) {
-            o[i] = new Composition(co.n);
-            for (let j = 0; j < co.n; j++) {
-                o[i].set(j, c[i].get(j));
-            }
-        }
-        return o;
+        return c.map((o) => {
+            const x = new Composition(co.getSum());
+            x.or(o);
+            return x;
+        });
     }
 }

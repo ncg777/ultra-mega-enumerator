@@ -89,4 +89,19 @@ describe('Combination', () => {
         });
     });
 
+    test('should return []  for combinationRefinements when no refinements exist', () => {
+        const comp = new Combination(1);
+        comp.set(0);
+        const refinements = Combination.combinationRefinements(comp);
+        expect(refinements.length).to.equal(0);
+    });
+    
+    test('should return an array of combinations for valid refinements', () => {
+        const comp = new Combination(2);
+        
+        const refinements = Combination.combinationRefinements(comp);
+        expect(refinements).to.be.instanceOf(Array);
+        expect(refinements!.length).to.equal(2);
+    });
+
 });
