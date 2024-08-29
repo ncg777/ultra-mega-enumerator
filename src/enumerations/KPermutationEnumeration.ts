@@ -1,4 +1,4 @@
-import { Enumeration } from 'utils/Enumeration';
+import { Enumeration } from './../utils/Enumeration';
 import { MixedRadixEnumeration } from './MixedRadixEnumeration';
 
 export class KPermutationEnumeration extends Enumeration<Array<number>> {

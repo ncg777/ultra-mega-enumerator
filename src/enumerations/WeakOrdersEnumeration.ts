@@ -1,4 +1,4 @@
-import { Enumeration } from 'utils/Enumeration';
+import { Enumeration } from './../utils/Enumeration';
 import { CompositionEnumeration } from './CompositionEnumeration';
 import { WordPermutationEnumeration } from './WordPermutationEnumeration';
 
@@ -8,6 +8,7 @@ export class WeakOrdersEnumeration extends Enumeration<number[]> {
     private currentBase: number[] = [];
 
     constructor(n: number) {
+        super();
         this.ce = new CompositionEnumeration(n);
         this.nextBase();
         this.me = new WordPermutationEnumeration(this.currentBase);

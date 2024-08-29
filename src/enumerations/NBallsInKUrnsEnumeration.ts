@@ -1,4 +1,4 @@
-import { Enumeration } from 'utils/Enumeration';
+import { Enumeration } from './../utils/Enumeration';
 import { Combination } from 'objects/Combination';
 import { BitSet } from '../objects/BitSet';
 import { CombinationEnumeration } from './CombinationEnumeration';

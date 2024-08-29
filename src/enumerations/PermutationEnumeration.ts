@@ -1,5 +1,4 @@
-import { Numbers } from 'utils/Numbers';
-import { Enumeration } from 'utils/Enumeration';
+import { Enumeration } from './../utils/Enumeration';
 
 export class PermutationEnumeration extends Enumeration<number[]> {
     private p: number[];

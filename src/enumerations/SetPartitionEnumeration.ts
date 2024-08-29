@@ -1,5 +1,5 @@
 // SetPartitionEnumeration.ts
-import { Enumeration } from 'utils/Enumeration';
+import { Enumeration } from './../utils/Enumeration';
 
 export class SetPartitionEnumeration extends Enumeration<number[]> {
     private readonly n: number;
@@ -8,6 +8,7 @@ export class SetPartitionEnumeration extends Enumeration<number[]> {
     private hasMore: boolean;
 
     constructor(n: number) {
+        super();
         this.n = n;
         this.k = new Array(n).fill(0);
         this.m = new Array(n).fill(0);

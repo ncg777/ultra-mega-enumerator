@@ -1,5 +1,5 @@
-import { Enumeration } from 'utils/Enumeration';
-import { hashCodeFor } from 'utils/utils';
+import { Enumeration } from './../utils/Enumeration';
+import { hashCodeFor } from './../utils/utils';
 
 class State {
     private readonly parent: State | null;

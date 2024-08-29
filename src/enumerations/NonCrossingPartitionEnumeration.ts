@@ -1,4 +1,4 @@
-import { Enumeration } from 'utils/Enumeration';
+import { Enumeration } from './../utils/Enumeration';
 import { DyckWordEnumeration } from './DyckWordEnumeration';
 
 export class NonCrossingPartitionEnumeration extends Enumeration<number[]> {
