@@ -7,6 +7,7 @@ export class Composition extends Combination {
         super(n-1);
     }
 
+    getTotal() {return this.getN()+1;}
     // Creating a Composition from a boolean array
     public static compositionFromBooleanArray(comp: boolean[]): Composition {
         const instance = new Composition(comp.length);
@@ -28,15 +29,6 @@ export class Composition extends Combination {
             }
         }
         return instance;
-    }
-
-    // Creating a Composition from a Combination
-    public static compositionFromCombination(c: Combination): Composition {
-        return c.getComposition();
-    }
-
-    getTotal(): number {
-        return this.n + 1;
     }
 
     asArray(): number[] {

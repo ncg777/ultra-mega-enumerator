@@ -13,10 +13,10 @@ export class Combination extends BitSet implements Comparable<Combination> {
         if(n<1){throw new Error("Invalid value of n.")}
         super(n);
     }
-    getN(): number { return this.n+1;}
+    getN(): number { return this.n;}
 
     getK(): number {
-        return this.cardinality()+1;
+        return this.cardinality();
     }
 
     asSequence(): number[]{
