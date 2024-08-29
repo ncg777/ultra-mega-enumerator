@@ -1,7 +1,6 @@
 import { expect } from 'chai';
 import { BitSet } from './../../src/objects/BitSet';
 import { BitSetEnumeration } from './../../src/enumerations/BitSetEnumeration';
-import _ from 'lodash';
 
 describe('BitSetEnumeration', () => {
     it('should correctly enumerate all BitSet combinations of size 3', () => {
@@ -31,7 +30,7 @@ describe('BitSetEnumeration', () => {
         const expectedTrueBits = expectedResults.map(bs => [...bs.getTrueBits()].sort());
 
         expect(actualTrueBits).to.have.length(expectedTrueBits.length);
-        expect(_.isEqual(actualTrueBits, expectedTrueBits)).to.be.true;
+        expect(actualTrueBits).to.deep.equal(expectedTrueBits);
     });
 
     it('should throw error when trying to enumerate with negative size', () => {

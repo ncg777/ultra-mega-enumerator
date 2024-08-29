@@ -1,4 +1,4 @@
-import { Enumeration } from 'utils/Enumeration';
+import { Enumeration } from './../utils/Enumeration';
 
 /**
  * Enumerates all values of the mixed radix base given as a parameter.
@@ -9,45 +9,26 @@ export class MixedRadixEnumeration extends Enumeration<number[]> {
   private base: number[] = [];
   private current: number[] | null=null;
   private isLast: boolean = false;
+  private currentIndex:number = -1;
+  private total:number = -1;
 
-  constructor(base0: number[]) {
+  constructor(base: number[]) {
     super();
-    this.init(base0);
-  }
-
-  private init(base: number[]): void {
-    if (base == null) {
-      throw new Error("MixedRadixEnumeration - null base array");
-    }
-    this.base = [...base];
+    this.base = [...base].map((b => Math.round(b)));
 
     for (let i = 0; i < base.length; i++) {
       if (base[i] < 1) {
         throw new Error("MixedRadixEnumeration - non-positive base");
       }
     }
-    this.current = null;
+    this.total = 1;
+    for(const b of base) {this.total*=b;}
+    this.total = Math.round(this.total);
+    this.current = null;  
   }
 
   hasMoreElements(): boolean {
-    if (this.current == null) {
-      return true;
-    }
-    if (this.isLast) {
-      return false;
-    }
-
-    let hasMore = false;
-    for (let i = 0; i < this.base.length; i++) {
-      if (this.current[i] < (this.base[i] - 1)) {
-        hasMore = true;
-        break;
-      }
-    }
-    if (!hasMore) {
-      this.isLast = true;
-    }
-    return hasMore;
+    return this.currentIndex < this.total-1;
   }
 
   nextElement(): number[] {
@@ -55,13 +36,13 @@ export class MixedRadixEnumeration extends Enumeration<number[]> {
       throw new Error("No such element");
     }
 
-    const result: number[] = new Array(this.base.length);
-    if (this.current == null) {
+    let result: number[] = [];
+    if (this.currentIndex == -1) {
       for (let i = 0; i < this.base.length; i++) {
-        result[i] = 0;
+        result.push(0);
       }
     } else {
-      result.splice(0, this.base.length, ...this.current);
+      result = [...this.current!];
       for (let i = 0; i < this.base.length; i++) {
         if (result[i] < (this.base[i] - 1)) {
           result[i]++;
@@ -72,19 +53,8 @@ export class MixedRadixEnumeration extends Enumeration<number[]> {
       }
     }
     this.current = [...result];
-
+    this.currentIndex++;
+    console.log(result);
     return result;
-  }
-
-  static mapIndexToCoordinates(index: number, base: number[]): number[] {
-    const coords: number[] = new Array(base.length);
-    let t = index;
-
-    for (let k = base.length - 1; k >= 0; k--) {
-      const b = base[k];
-      coords[k] = t % b;
-      t = Math.floor(t / b);
-    }
-    return coords;
   }
 }

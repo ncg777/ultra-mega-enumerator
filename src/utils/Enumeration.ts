@@ -1,16 +1,4 @@
-export abstract class Enumeration<T> implements Iterable<T> {
+export abstract class Enumeration<T> {
     protected abstract hasMoreElements(): boolean;
     protected abstract nextElement(): T;
-
-    [Symbol.iterator](): Iterator<T> {
-        const enumeration = this; // Capture the context
-
-        return {
-            next(): IteratorResult<T> {
-                const hasNext = enumeration.hasMoreElements();
-                const nextValue = hasNext ? enumeration.nextElement() : undefined;
-                return { done: !enumeration.hasMoreElements(), value: nextValue! };
-            },
-        };
-    }
 }
