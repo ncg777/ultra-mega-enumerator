@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./src/index.ts"
+  },
   "scripts": {
     "build": "tsc",
     "publish": "yarn build && yarn pack",
@@ -12,15 +15,17 @@
   "author": "Nicolas Couture-Grenier <nicolas.couture.grenier@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/chai": "^4.3.19",
+    "@types/chai": "4.3.19",
     "@types/jest": "^29.5.12",
-    "chai": "^5.1.1",
+    "@types/lodash": "^4.17.7",
+    "chai": "4.5.0",
     "jest": "^29.7.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4"
   },
   "dependencies": {
+    "lodash": "^4.17.21",
     "yarn": "^1.22.22"
   }
 }

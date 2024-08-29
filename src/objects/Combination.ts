@@ -2,7 +2,6 @@ import { CombinationEnumeration } from 'enumerations/CombinationEnumeration';
 import { BitSet } from 'objects/BitSet';
 import { Composition } from './Composition';
 import { Numbers } from 'utils/Numbers';
-import { hashCodeFor } from 'utils/utils';
 
 /**
  * Class representing a Combination, which extends BitSet to manage combinations

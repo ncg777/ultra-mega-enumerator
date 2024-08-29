@@ -1,5 +1,5 @@
-import { BitSet } from 'objects/BitSet';
-import { Enumeration } from 'utils/Enumeration';
+import { BitSet } from './../objects/BitSet';
+import { Enumeration } from './../utils/Enumeration';
 
 export class BitSetEnumeration extends Enumeration<BitSet> {
     private current: BitSet|undefined;
@@ -18,7 +18,7 @@ export class BitSetEnumeration extends Enumeration<BitSet> {
     }
 
     hasMoreElements(): boolean {
-        return this.current !== null;
+        return this.current != undefined;
     }
 
     private next(b: BitSet): BitSet|undefined {

@@ -10,8 +10,8 @@ export class BitSet {
         this.bits = new Set<number>();
     }
     
-    public getTrueBits() {
-        return [...this.bits];
+    public getTrueBits():Set<number>{
+        return new Set(this.bits);
     }
 
     compareTo(other: BitSet): number {
@@ -143,7 +143,7 @@ export class BitSet {
         return clone;
     }
 
-    toBinaryArray(): number[] {
+    getBitSetAsNumberArray(): number[] {
         return Array.from({ length: this.n }, (_, i) => this.get(i) ? 1 : 0);
     }
 

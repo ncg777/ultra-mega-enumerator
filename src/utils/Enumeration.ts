@@ -9,7 +9,7 @@ export abstract class Enumeration<T> implements Iterable<T> {
             next(): IteratorResult<T> {
                 const hasNext = enumeration.hasMoreElements();
                 const nextValue = hasNext ? enumeration.nextElement() : undefined;
-                return { done: !hasNext, value: nextValue! }; // Use non-null assertion since we handle the case where hasNext is false
+                return { done: !enumeration.hasMoreElements(), value: nextValue! };
             },
         };
     }
