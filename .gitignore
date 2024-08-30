@@ -5,6 +5,7 @@ coverage/
 *.log
 *.tmp
 *.js.map
+*.tgz
 yarn-error.log
 .yarn/
 tsconfig.tsbuildinfo
