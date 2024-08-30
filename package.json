@@ -1,7 +1,7 @@
 {
-  "name": "enumerati",
+  "name": "ultra-mega-enumerator",
   "version": "1.0.0",
-  "description": "Enumerati is a lightweight library designed to enumerate various combinatorial objects.",
+  "description": "Ultra Mega Enumerator is a lightweight library designed to enumerate various combinatorial objects.",
   "keywords": [
     "combinatorial",
     "enumeration",
@@ -48,7 +48,7 @@
     "test": "jest",
     "prepublishOnly": "yarn build"
   },
-  "repository": "https://github.com/ncg777/enumerati.git",
+  "repository": "https://github.com/ncg777/ultra-mega-enumerator.git",
   "author": "Nicolas Couture-Grenier <nicolas.couture.grenier@gmail.com>",
   "license": "MIT",
   "devDependencies": {

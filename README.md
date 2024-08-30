@@ -1,6 +1,6 @@
-# Enumerati 1.0.0
+# Ultra Mega Enumerator 1.0.0
 
-Enumerati is a lightweight library designed to enumerate various combinatorial objects. Its goal is to provide efficient tools for generating combinations, permutations, compositions, partitions, and more.
+Ultra Mega Enumerator is a lightweight library designed to enumerate various combinatorial objects. Its goal is to provide efficient tools for generating combinations, permutations, compositions, partitions, and more.
 
 ## Table of Contents
 
@@ -20,17 +20,17 @@ Combinatorial enumeration is a fundamental aspect of discrete mathematics and co
 You can install the Enumerati library via npm. To do so, run the following command in your terminal:
 
 ```bash
-npm install enumerati
+npm install ultra-mega-enumerator
 ```
 
 Alternatively, if you are using Yarn as your package manager, you can install it with:
 ```bash
-yarn add enumerati
+yarn add ultra-mega-enumerator
 ```
 
 ## Usage
 
-Once installed, you can import and use Enumerati in your JavaScript or TypeScript project as follows:
+Once installed, you can import and use Ultra Mega Enumerator in your JavaScript or TypeScript project as follows:
 
 
 ```ts
