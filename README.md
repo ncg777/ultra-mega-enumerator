@@ -1,4 +1,4 @@
-# Ultra Mega Enumerator 1.0.2
+# Ultra Mega Enumerator 1.0.3
 
 Ultra Mega Enumerator is a lightweight library designed to enumerate various combinatorial objects. Its goal is to provide efficient tools for generating combinations, permutations, compositions, partitions, and more.
 
@@ -34,7 +34,7 @@ Once installed, you can import and use Ultra Mega Enumerator in your JavaScript 
 
 
 ```ts
-import { CombinationEnumeration } from 'enumerati';
+import { CombinationEnumeration } from 'ultra-mega-enumerator';
 
 // Example usage
 for(let e of new CombinationEnumeration(7,4){ 

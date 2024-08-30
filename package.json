@@ -1,6 +1,6 @@
 {
   "name": "ultra-mega-enumerator",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Ultra Mega Enumerator is a lightweight library designed to enumerate various combinatorial objects.",
   "keywords": [
     "combinatorial",
