@@ -22,7 +22,7 @@ Combinatorial enumeration is a fundamental aspect of discrete mathematics and co
 ## Enumerations
 The library includes the following enumeration classes located in the enumerations/ directory:
 
-- AbstractEnumeration: Base class for all enumerations.
+- AbstractEnumeration: Base class for all enumerations implementing Iterable.
 - BitSetEnumeration: Enumerate bit sets.
 - CombinationEnumeration: Enumerate combinations.
 - CompositionEnumeration: Enumerate compositions.
