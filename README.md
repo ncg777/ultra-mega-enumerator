@@ -1,4 +1,4 @@
-# Ultra Mega Enumerator 1.0.0
+# Ultra Mega Enumerator 1.0.1
 
 Ultra Mega Enumerator is a lightweight library designed to enumerate various combinatorial objects. Its goal is to provide efficient tools for generating combinations, permutations, compositions, partitions, and more.
 
