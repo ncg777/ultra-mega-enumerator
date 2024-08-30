@@ -1,7 +1,7 @@
 {
   "name": "enumerati",
   "version": "1.0.0",
-  "description": "",
+  "description": "Enumerati is a lightweight library designed to enumerate various combinatorial objects.",
   "keywords": [
     "combinatorial",
     "enumeration",

@@ -17,9 +17,43 @@ Enumerati is a lightweight library designed to enumerate various combinatorial o
 Combinatorial enumeration is a fundamental aspect of discrete mathematics and computer science. The Enumerati library offers a collection of classes for generating and handling different types of combinatorial structures, making it a valuable resource for researchers, students, and developers working with these concepts.
 
 ## Installation
+You can install the Enumerati library via npm. To do so, run the following command in your terminal:
+
+```bash
+npm install enumerati
+```
+
+Alternatively, if you are using Yarn as your package manager, you can install it with:
+```bash
+yarn add enumerati
+```
+
+## Usage
+
+Once installed, you can import and use Enumerati in your JavaScript or TypeScript project as follows:
 
 
-## Enumerations
+```ts
+import { CombinationEnumeration } from 'enumerati';
+
+// Example usage
+for(let e of new CombinationEnumeration(7,4){ 
+    //... 
+}
+```
+The Numbers class contains static counting functions such as factorial, binomial, bell and catalan.
+
+Make sure you have the required dependencies installed if you're using TypeScript:
+```bash
+npm install --save-dev typescript @types/node
+```
+or
+```bash
+yarn add --dev typescript @types/node
+
+```
+
+### Enumerations
 The library includes the following enumeration classes located in the enumerations/ directory:
 
 - AbstractEnumeration: Base class for all enumerations implementing Iterable.
@@ -40,7 +74,7 @@ The library includes the following enumeration classes located in the enumeratio
 - WordEnumeration: Enumerate words over an alphabet.
 - WordPermutationEnumeration: Enumerate permutations of words.
 
-## Objects
+### Objects
 The library also provides the following combinatorial objects in the objects/ directory:
 - BitSet: A representation of a set using bits.
 - Combination: A representation of a mathematical combination.
