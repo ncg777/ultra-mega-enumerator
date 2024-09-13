@@ -1,4 +1,4 @@
-# Ultra Mega Enumerator 1.0.4
+# Ultra Mega Enumerator 1.0.5
 
 Ultra Mega Enumerator is a lightweight library designed to enumerate various combinatorial objects. Its goal is to provide efficient tools for generating combinations, permutations, compositions, partitions, and more.
 
@@ -17,7 +17,7 @@ Ultra Mega Enumerator is a lightweight library designed to enumerate various com
 Combinatorial enumeration is a fundamental aspect of discrete mathematics and computer science. The Ultra Mega Enumerator library offers a collection of classes for generating and handling different types of combinatorial structures, making it a valuable resource for researchers, students, and developers working with these concepts.
 
 ## Installation
-You can install the Enumerati library via npm. To do so, run the following command in your terminal:
+You can install the Ultra Mega Enumerator library via npm. To do so, run the following command in your terminal:
 
 ```bash
 npm install ultra-mega-enumerator
