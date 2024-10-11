@@ -109,8 +109,25 @@ export class Numbers {
   }
 
   static catalan(n: number): number {
-      if (n === 0) return 1;
-      return this.binomial(2 * n, n) - this.binomial(2 * n, n + 1);
+    if (n < 0) {
+        throw new Error("n must be non-negative.");
+    }
+
+    let result = 1;
+
+    for (let i = 0; i < n; i++) {
+        // Calculate the next value in the sequence
+        const next = (result * 2 * (2 * i + 1)) / (i + 2);
+
+        // Check for overflow
+        if (next > Number.MAX_SAFE_INTEGER) {
+            throw new Error("Overflow detected.");
+        }
+
+        result = next;
+    }
+
+    return result;
   }
 
   static bell(n: number): number {
@@ -135,14 +152,35 @@ export class Numbers {
   }
 
   static binomial(n: number, k: number): number {
-      let num = BigInt(n);
-      let den = BigInt(1);
-      for (let i = 2; i <= k; i++) {
-          den *= BigInt(i);
-          num *= BigInt(n - i + 1);
-      }
+    if (n < 0) {
+        throw new Error("n must be non-negative.");
+    }
+    if (k < 0) {
+        throw new Error("k must be non-negative.");
+    }
+    if (k > n) {
+        throw new Error("k cannot be greater than n.");
+    }
 
-      return Number(num / den);
+    if (k > n - k) {
+        k = n - k;
+    }
+
+    let result = 1;
+
+    for (let i = 0; i < k; i++) {
+        // Calculate the next value
+        const next = (result * (n - i)) / (i + 1);
+
+        // Check for overflow
+        if (next > Number.MAX_SAFE_INTEGER) {
+            throw new Error("Overflow detected.");
+        }
+
+        result = next;
+    }
+
+    return result;
   }
 
   static multinomial(n: number[]): number {
