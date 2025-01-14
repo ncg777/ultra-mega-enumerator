@@ -1,6 +1,6 @@
 {
   "name": "ultra-mega-enumerator",
-  "version": "2024.11.16",
+  "version": "2025.1.14",
   "description": "Ultra Mega Enumerator is a lightweight library designed to enumerate various combinatorial objects.",
   "keywords": [
     "combinatorial",
@@ -33,12 +33,16 @@
     "MIT"
   ],
   "main": "dist/index.js",
-  "types": "dist/types/index.d.ts",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/**/*"
   ],
   "exports": {
-    ".": "./dist/index.js"
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
   },
   "scripts": {
     "build:js": "webpack --config webpack.config.ts",
