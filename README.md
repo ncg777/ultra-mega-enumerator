@@ -9,7 +9,6 @@ Ultra Mega Enumerator is a lightweight library designed to enumerate various com
 - [Usage](#usage)
 - [Enumerations](#enumerations)
 - [Objects](#objects)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Overview
@@ -43,16 +42,6 @@ for(let e of new CombinationEnumeration(7,4){
 ```
 The Numbers class contains static counting functions such as factorial, binomial, bell and catalan.
 
-Make sure you have the required dependencies installed if you're using TypeScript:
-```bash
-npm install --save-dev typescript @types/node
-```
-or
-```bash
-yarn add --dev typescript @types/node
-
-```
-
 ### Enumerations
 The library includes the following enumeration classes located in the enumerations/ directory:
 
@@ -67,6 +56,7 @@ The library includes the following enumeration classes located in the enumeratio
 - MixedRadixEnumeration: Enumerate mixed radix systems or cartesian product of integers.
 - NGoodPathEnumeration: Enumerate N-good paths.
 - NonCrossingPartitionEnumeration: Enumerate non-crossing partitions.
+- PartitionEnumeration: Enumerate integer partitions.
 - PermutationEnumeration: Enumerate permutations.
 - SetPartitionEnumeration: Enumerate set partitions.
 - WeakCompositionEnumeration: Enumerate weak compositions.
@@ -79,15 +69,6 @@ The library also provides the following combinatorial objects in the objects/ di
 - BitSet: A representation of a set using bits.
 - Combination: A representation of a mathematical combination.
 - Composition: A representation of a mathematical composition.
-
-## Contributing
-Contributions are welcome! If you have suggestions for improvements or new enumerators, please submit a pull request or open an issue.
-
-Fork the repository.
-Create a new branch (git checkout -b feature-branch).
-Make your changes and commit them (git commit -m 'Add new feature').
-Push to the branch (git push origin feature-branch).
-Open a pull request.
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
