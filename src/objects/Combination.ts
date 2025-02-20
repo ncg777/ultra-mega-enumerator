@@ -1,5 +1,5 @@
 import { CombinationEnumeration } from './../enumerations/CombinationEnumeration';
-import { BitSet } from '.';
+import { BitSet } from './BitSet';
 import { Numbers } from '../Numbers';
 import { Utils } from '../Utils';
 

@@ -1,5 +1,4 @@
 import { Combination } from ".";
-import { Composition } from ".";
 
 /**
  * The {@code ImmutableCombination} class represents a combination of elements that cannot 
