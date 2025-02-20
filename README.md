@@ -36,7 +36,7 @@ Once installed, you can import and use Ultra Mega Enumerator in your JavaScript 
 import { CombinationEnumeration } from 'ultra-mega-enumerator';
 
 // Example usage
-for(let e of new CombinationEnumeration(7,4){ 
+for(let e of new CombinationEnumeration(7,4)){ 
     //... 
 }
 ```
