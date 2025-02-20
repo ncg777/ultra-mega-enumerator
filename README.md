@@ -9,7 +9,6 @@ Ultra Mega Enumerator is a lightweight library designed to enumerate various com
 - [Usage](#usage)
 - [Enumerations](#enumerations)
 - [Objects](#objects)
-- [License](#license)
 
 ## Overview
 
@@ -69,6 +68,4 @@ The library also provides the following combinatorial objects in the objects/ di
 - BitSet: A representation of a set using bits.
 - Combination: A representation of a mathematical combination.
 - Composition: A representation of a mathematical composition.
-
-## License
-This project is licensed under the MIT License. See the LICENSE file for details.
+- more...
