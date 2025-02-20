@@ -31,7 +31,11 @@ export class BitSet {
     size(): number {
         return this.n;
     }
-
+    
+    getBitSetAsBooleanArray(): boolean[] {
+        return Array.from({ length: this.n }, (_, i) => this.get(i) ? true : false);
+    }
+    
     get(bitIndex: number): boolean {
         if (bitIndex >= this.n) {
             throw new Error("Index out of bounds");

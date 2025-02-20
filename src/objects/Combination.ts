@@ -1,6 +1,7 @@
 import { CombinationEnumeration } from './../enumerations/CombinationEnumeration';
-import { BitSet } from './BitSet';
+import { BitSet } from '.';
 import { Numbers } from '../Numbers';
+import { Utils } from '../Utils';
 
 /**
  * Class representing a Combination, which extends BitSet to manage combinations
@@ -10,13 +11,107 @@ export class Combination extends BitSet {
     constructor(n: number) {
         super(n);
     }
-
+    public getN(): number {
+        return this.n;
+    }
+    public static fromBooleanArray(array: boolean[]): Combination {
+        const combination = new Combination(array.length);
+        for (let i = 0; i < array.length; i++) {
+            combination.set(i, array[i]);
+        }
+        return combination;
+    }
+    public static createWithSizeAndSet(n: number, set: Set<number>): Combination {
+        // Create a boolean array of size n
+        const booleanArray: boolean[] = Array.from({ length: n }, (_, index) => set.has(index));
+    
+        // Use the fromBooleanArray method to create the Combination instance
+        const combination = Combination.fromBooleanArray(booleanArray);
+    
+        // Return the new ImmutableCombination instance
+        return combination;
+    }
+    public asSequence(): number[] {
+        const seq: number[] = [];
+        for (let i = this.nextSetBit(0); i >= 0; i = this.nextSetBit(i + 1)) {
+            seq.push(i);
+        }
+        return seq;
+    }
+    public combinationString(): string {
+        const str = Array.from(this.getTrueBits()).map((s) => s.toString()).join(" ");
+        return str;
+    }
+   
+    public getIntervalVector(): number[] {
+        return Utils.calcIntervalVector(this.getBitSetAsNumberArray());
+    }
     getCombinationAsArray(): number[]{
         const  o = [];
         for (let i = this.nextSetBit(0); i >= 0; i = this.nextSetBit(i + 1)) {
             o.push(i)
         }
         return o;
+    }
+
+    // Method to find the intersection of two combinations
+    public intersect(c: Combination): Combination {
+        const n = Math.min(this.getN(), c.getN());
+        const intersectionBits: boolean[] = Array(n).fill(false);
+
+        for (let i = 0; i < n; i++) {
+            intersectionBits[i] = this.get(i) && c.get(i); // Bitwise AND operation
+        }
+
+        return Combination.fromBooleanArray(intersectionBits);
+    }
+
+    // Method to subtract one combination from another
+    public minus(c: Combination): Combination {
+        const resultBits: boolean[] = Array(this.getN()).fill(false); // Initialize with false
+        const n = Math.min(this.getN(), c.getN());
+
+        for (let i = 0; i < this.getN(); i++) {
+            resultBits[i] = this.get(i); // Start with current combination bits
+        }
+
+        // for each index, set to false if both combinations have the bit set to true
+        for (let i = 0; i < n; i++) {
+            if (this.get(i) && c.get(i)) {
+                resultBits[i] = false; // Remove the bit if it exists in both
+            } else {
+                resultBits[i] = this.get(i); // Keep the original bit if it doesn't exist in c
+            }
+        }
+
+        return Combination.fromBooleanArray(resultBits);
+    }
+
+    // Static method to merge two combinations
+    public static merge(a: Combination, b: Combination): Combination {
+        const maxN = Math.max(a.getN(), b.getN());
+        const mergedBits: boolean[] = Array(maxN).fill(false);
+
+        for (let i = 0; i < a.getN(); i++) {
+            mergedBits[i] = mergedBits[i] || a.get(i); // Bitwise OR operation
+        }
+        
+        for (let i = 0; i < b.getN(); i++) {
+            mergedBits[i] = mergedBits[i] || b.get(i); // Bitwise OR operation
+        }
+
+        return Combination.fromBooleanArray(mergedBits);
+    }
+
+    public mergeWith(a: Combination) {
+        return Combination.merge(this,a);
+    }
+
+    public symmetricDifference(y: Combination): Combination {
+        const x = new BitSet(Math.max(this.getN(), y.getN()));
+        x.or(this);
+        x.xor(y);
+        return Combination.fromBooleanArray(x.getBitSetAsBooleanArray());
     }
 
     // Rotate the bits in the combination
