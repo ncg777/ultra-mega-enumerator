@@ -1,4 +1,4 @@
-import { BitSet } from './objects/'; // Import BitSet if it's defined in another file
+import { BitSet } from './objects/';
 import { PCS12 } from './objects/';
 
 class Utils {

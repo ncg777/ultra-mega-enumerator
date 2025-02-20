@@ -1,8 +1,9 @@
 import { CustomComparisonChain, Ordering } from '../Utils';
 import { COMMON_NAMES, FORTE_NUMBERS} from '../ForteCSV';
-import { Composition, ImmutableCombination } from '.';
-import { Combination } from '.';
-import { Necklace } from '.';
+import { Composition } from './Composition';
+import { Combination } from './Combination';
+import { ImmutableCombination } from './ImmutableCombination';
+import { Necklace } from './Necklace';
 
 export class PCS12 extends ImmutableCombination {
     private static ChordCombinationDict = new Map<string, PCS12>();

@@ -3121,13 +3121,6 @@ typescript@^5.5.4:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.7.3.tgz#919b44a7dbb8583a9b856d162be24a54bf80073e"
   integrity sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==
 
-"ultra-mega-enumerator@file:.":
-  version "2025.2.20"
-  dependencies:
-    "@types/node" "^22.5.1"
-    ultra-mega-enumerator "file:C:/Users/greni/AppData/Local/Yarn/Cache/v6/npm-ultra-mega-enumerator-2025.2.20-0474e090-d795-44f1-8ab6-b28b0ac73eeb-1740050920999/node_modules/ultra-mega-enumerator"
-    yarn "^1.22.22"
-
 undici-types@~6.20.0:
   version "6.20.0"
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-6.20.0.tgz#8171bf22c1f588d1554d55bf204bc624af388433"
