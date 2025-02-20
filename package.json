@@ -1,6 +1,6 @@
 {
   "name": "ultra-mega-enumerator",
-  "version": "2025.2.20",
+  "version": "2025.2.20-2",
   "description": "Ultra Mega Enumerator is a lightweight library designed to enumerate various combinatorial objects.",
   "keywords": [
     "combinatorial",
@@ -70,7 +70,6 @@
   },
   "dependencies": {
     "@types/node": "^22.5.1",
-    "ultra-mega-enumerator": "file:",
     "yarn": "^1.22.22"
   }
 }
