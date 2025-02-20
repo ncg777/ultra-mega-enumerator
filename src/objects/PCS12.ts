@@ -1,6 +1,6 @@
 import { CustomComparisonChain, Ordering } from '../Utils';
 import { COMMON_NAMES, FORTE_NUMBERS} from '../ForteCSV';
-import { ImmutableCombination } from '.';
+import { Composition, ImmutableCombination } from '.';
 import { Combination } from '.';
 import { Necklace } from '.';
 
@@ -14,11 +14,6 @@ export class PCS12 extends ImmutableCombination {
     constructor(set: Set<number>) {
         super(Combination.createWithSizeAndSet(12, set));
     }
-    /*
-    public getIntervals() :number[] {
-      return this.transpose(-this.getForteNumberRotation()).getComposition().getCompositionAsArray();
-    }
-    */
     public static identify(input: ImmutableCombination): PCS12 {
       if(input.isEmpty()) return PCS12.empty();
       if (input.getN() !== 12) {
@@ -32,7 +27,9 @@ export class PCS12 extends ImmutableCombination {
     public static empty(): PCS12 {
         return new PCS12(new Set<number>());
     }
-
+    public getIntervals() :number[] {
+      return Composition.compositionFromCombination(this.transpose(-this.getForteNumberRotation()).combination).getCompositionAsArray();
+    }
     public static generate(): Set<PCS12> {
         const output = new Set<PCS12>();
         const necklaceSet = Necklace.generate(12, 2);
