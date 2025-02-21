@@ -34,7 +34,8 @@ export enum Operation {
     GreaterThanOrEqual = 'GreaterThanOrEqual',
     Binomial = 'Binomial',
     ExpandBits = 'ExpandBits',
-    ExpandBitsFill = 'ExpandBitsFill'
+    ExpandBitsFill = 'ExpandBitsFill',
+    CantorIntervalBinaryNumber = 'CantorIntervalBinaryNumber'
   }
   
   // Define Combiner Enum
@@ -85,6 +86,7 @@ export enum Operation {
     [Operation.Binomial, (x, y) => Numbers.binomial(x,y)],
     [Operation.ExpandBits, (x, y) => Numbers.expandBits(x,y,'0')],
     [Operation.ExpandBitsFill, (x, y) => Numbers.expandBits(x,y,'bit')],
+    [Operation.CantorIntervalBinaryNumber, (x,y) => Numbers.CantorIntervalBinaryNumber(x,y)],
   ]);
   
 export class Sequence{

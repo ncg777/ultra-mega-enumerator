@@ -249,6 +249,52 @@ export class Numbers {
 
         return parseInt(expandedBinary, 2);
     }
+
+    static decodeCantor(v: number): [number, number] {
+        const w = Math.floor((-1 + Math.sqrt(1 + 8 * v)) / 2);
+        const t = w * (w + 1) / 2;
+        const k2 = v - t; // s
+        const k1 = w - k2; // d'
+        return [k1, k2];
+    }
+    
+    static decodeIntervals(iPrime: number): number {
+        if (iPrime % 2 === 0) {
+            return iPrime / 2; // d >= 0
+        } else {
+            return -((iPrime + 1) / 2); // d < 0
+        }
+    }
+    
+    static CantorIntervalBinaryNumber(a: number, b: number): number {
+        // Step 1: Determine segment length
+        const c = Math.abs(a);
+        const sign = a >= 0 ? 1 : -1;
+    
+        // Step 2: Decode b into duration d and step s
+        let v = Math.abs(b); // Use absolute value of b for decoding
+        const [iPrime, s] = this.decodeCantor(v);
+        const i = this.decodeIntervals(iPrime);
+    
+        // Step 3: Generate binary sequence
+        const binaryArray = new Array(c).fill(0);
+        if (i !== 0) {
+            const start = i > 0 ? 0 : c - 1; // Start from 0 or end based on d's sign
+            for (let j = 0; j < s; j++) {
+                const offset = (start + j * i) % c;
+                const adjustedOffset = (offset + c) % c; // Ensure non-negative index
+                binaryArray[adjustedOffset] = 1;
+            }
+        }
+    
+        // Step 4: Invert bits if a is negative
+        if (sign < 0) {
+            for (let j = 0; j < c; j++) {
+                binaryArray[j] = 1 - binaryArray[j];
+            }
+        }
+    
+        // Step 5: Convert binary array to decimal number
+        return parseInt(binaryArray.reverse().join(''), 2);
+    }
 }
-
-
