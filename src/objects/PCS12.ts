@@ -279,6 +279,47 @@ export class PCS12 extends ImmutableCombination {
       PCS12.ChordCombinationDict = chordCombinationDict;
       await this.fillForteNumbersDict(); // Load forte numbers after generating chords
   }
+
+  public calcCenterTuning(center: number): number {
+    let o = 1.0;
+    const s = this.asSequence();
+    const m = new Map<number, number>();
+
+    // Populate the map for center tuning with the values
+    for (let i = -5; i < 7; i++) {
+        m.set((center + i + 12) % 12, Math.pow(2.0, (i / 12.0)));
+    }
+
+    // Calculate product based on the sequence
+    for (const t of s) {
+        o *= m.get(t)!;
+    }
+
+    return Math.pow(o, 1.0 / s.length);
+  }
+
+  public getPotentialKeys(): number[] {
+    const ct: number[] = Array.from({ length: 12 }, (_, n) => this.calcCenterTuning(n));
+    let min = Number.MAX_VALUE;
+
+    // Find the minimum distance to 1.0
+    for (const d of ct) {
+        if (Math.abs(d - 1.0) < min) {
+            min = Math.abs(d - 1.0);
+        }
+    }
+
+    const keys = [];
+
+    // Collect keys that have the minimum distance
+    for (let i = 0; i < ct.length; i++) {
+        if (Math.abs(ct[i] - 1.0) <= min) {
+            keys.push(i);
+        }
+    }
+    
+    return keys;
+  }
   private static _isInitializing: boolean = false;
   public static async init(): Promise<void> {
     if (this._isInitialized) {

@@ -35,7 +35,8 @@ export enum Operation {
     Binomial = 'Binomial',
     ExpandBits = 'ExpandBits',
     ExpandBitsFill = 'ExpandBitsFill',
-    CantorIntervalBinaryNumber = 'CantorIntervalBinaryNumber'
+    CantorIntervalBinaryNumber = 'CantorIntervalBinaryNumber',
+    PermuteBits = 'PermuteBits'
   }
   
   // Define Combiner Enum
@@ -87,6 +88,7 @@ export enum Operation {
     [Operation.ExpandBits, (x, y) => Numbers.expandBits(x,y,'0')],
     [Operation.ExpandBitsFill, (x, y) => Numbers.expandBits(x,y,'bit')],
     [Operation.CantorIntervalBinaryNumber, (x,y) => Numbers.CantorIntervalBinaryNumber(x,y)],
+    [Operation.PermuteBits, (x,y) => Numbers.permuteBits(x,y)],
   ]);
   
 export class Sequence{

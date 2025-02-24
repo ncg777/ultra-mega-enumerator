@@ -297,4 +297,58 @@ export class Numbers {
         // Step 5: Convert binary array to decimal number
         return parseInt(binaryArray.reverse().join(''), 2);
     }
+
+    static getPermutation(n: number): number[] {
+        if (n === 0) return [0];
+    
+        let adjustedN = Math.abs(n);
+        let k = 1, fact = 1;
+    
+        while (fact <= adjustedN) {
+            k++;
+            fact *= k;
+        }
+        k--;
+    
+        let lehmerCode: number[] = [];
+        fact /= (k + 1);
+    
+        for (let i = k; i >= 1; i--) {
+            lehmerCode.push(Math.floor(adjustedN / fact));
+            adjustedN %= fact;
+            if (i > 1) fact /= i;
+        }
+    
+        let elements: number[] = Array.from({ length: k + 1 }, (_, i) => i);
+        let permutation: number[] = [];
+    
+        for (let index of lehmerCode) {
+            permutation.push(elements.splice(index, 1)[0]);
+        }
+    
+        if (n < 0) permutation.reverse();
+    
+        return permutation;
+    }
+    
+    static permuteBits(a: number, b: number): number {
+        let permutation = Numbers.getPermutation(b);
+        let permSize = permutation.length;
+        let numBits = 32;
+    
+        // Extend the permutation cyclically
+        let permMap: number[] = [];
+        for (let i = 0; i < numBits; i++) {
+            permMap[i] = permutation[i % permSize] + Math.floor(i / permSize) * permSize;
+        }
+    
+        let result = 0;
+        for (let i = 0; i < numBits; i++) {
+            let srcBit = (a >> i) & 1; // Extract bit i
+            let destBitPos = permMap[i] % numBits; // Keep within 32-bit range
+            result |= (srcBit << destBitPos); // Set bit in result
+        }
+    
+        return result >>> 0; // Ensure unsigned 32-bit integer
+    }
 }
