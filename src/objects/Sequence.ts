@@ -12,6 +12,10 @@ export enum Operation {
     Log = 'Log',
     Min = 'Min',
     Max = 'Max',
+    MaxZeroX = 'MaxZeroX',
+    MinZeroX = 'MinZeroX',
+    MaxZeroY = 'MaxZeroY',
+    MinZeroY = 'MinZeroY',
     Modulo = 'Modulo',
     Bounce = 'Bounce',
     And = 'And',
@@ -42,6 +46,8 @@ export enum Operation {
   // Define Combiner Enum
   export enum Combiner {
     Product = 'Product',
+    NegativeProduct = 'NegativeProduct',
+    Convolution = 'Convolution',
     Triangular = 'Triangular',
     Recycle = 'Recycle',
     LCM = 'LCM',
@@ -89,6 +95,10 @@ export enum Operation {
     [Operation.ExpandBitsFill, (x, y) => Numbers.expandBits(x,y,'bit')],
     [Operation.CantorIntervalBinaryNumber, (x,y) => Numbers.CantorIntervalBinaryNumber(x,y)],
     [Operation.PermuteBits, (x,y) => Numbers.permuteBits(x,y)],
+    [Operation.MaxZeroX, (x) => Math.max(0, x)],
+    [Operation.MinZeroX, (x) => Math.min(0, x)],
+    [Operation.MaxZeroY, (y) => Math.max(0, y)],
+    [Operation.MinZeroY, (y) => Math.min(0, y)],
   ]);
   
 export class Sequence{
@@ -358,10 +368,34 @@ export class Sequence{
           case Combiner.Product:
             for (let i = 0; i < x.size(); i++) {
               for (let j = 0; j < y.size(); j++) {   
-                if (operationFn) {
-                  o.add(operationFn(x.get(i)!, y.get(j)!));
+                    if (operationFn) {
+                        o.add(operationFn(x.get(i)!, y.get(j)!));
+                    }
                 }
             }
+            break;
+        case Combiner.NegativeProduct:
+            for(let z=0;z<2;z++) {
+                for (let i = 0; i < x.size(); i++) {
+                    for (let j = 0; j < y.size(); j++) {
+                        if(z==0) o.add(0);
+                        else if (operationFn) {
+                            o.set((((i*y.size())-(y.size()-1)+j)+o.size())%o.size(), operationFn(x.get(i)!, y.get(j)!));
+                        }
+                    }
+                }
+            }
+            break;
+          case Combiner.Convolution:
+            for(let i=0;i<x.size();i++) o.add(0);
+            for(let i=0; i<o.size(); i++) {
+                for(let j=0; j<y.size(); j++) {
+                    if(operationFn) {
+                        let v = operationFn(x.get(i)!, y.get(j)!);
+                        o.set((i+j) % o.size(), 
+                        o.get((i+j) % o.size())! + v);
+                    }
+                }
             }
             break;
           case Combiner.Triangular:
