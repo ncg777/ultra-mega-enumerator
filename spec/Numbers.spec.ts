@@ -55,6 +55,40 @@ describe('Numbers Class Tests', () => {
             Numbers.binomial(100, 50); // This should cause overflow
         }).toThrow("Overflow detected.");
     });
-
+  });
+  describe('Numbers Class Tests', () => {
+    describe('Balanced Ternary Conversion', () => {
+      test('toBalancedTernary converts correctly', () => {
+        expect(Numbers.toBalancedTernary(0, 3)).toEqual([0, 0, 0]);
+        expect(Numbers.toBalancedTernary(1, 1)).toEqual([1]);
+        expect(Numbers.toBalancedTernary(1, -3)).toEqual([1, 0, 0]);
+        expect(Numbers.toBalancedTernary(5, 3)).toEqual([1,-1, -1]);
+        expect(Numbers.toBalancedTernary(5, -3)).toEqual([-1, -1, 1]);
+      });
+  
+      test('fromBalancedTernary converts correctly', () => {
+        expect(Numbers.fromBalancedTernary([1, 0, 1])).toBe(10);
+        expect(Numbers.fromBalancedTernary([0, 1, 1])).toBe(4);
+        expect(Numbers.fromBalancedTernary([0, 0, 0])).toBe(0);
+        expect(Numbers.fromBalancedTernary([0, -1, -1])).toBe(-4);
+        expect(Numbers.fromBalancedTernary([1, 0])).toBe(3);
+        expect(Numbers.fromBalancedTernary([0, 1, 0, 1, 0])).toBe(30);
+      });
+    });
+  
+    describe('Binary Conversion', () => {
+      test('toBinary converts correctly', () => {
+        expect(Numbers.toBinary(10, 4)).toEqual([1, 0, 1, 0]);
+        expect(Numbers.toBinary(5, 5)).toEqual([0, 0, 1, 0, 1]);
+        expect(Numbers.toBinary(-5, 5)).toEqual([0, 0, -1, 0, -1]);
+        expect(Numbers.toBinary(0, 3)).toEqual([0, 0, 0]);
+      });
+  
+      test('fromBinary converts correctly', () => {
+        expect(Numbers.fromBinary([0, 1, 0, 1])).toBe(5); // binary 0101
+        expect(Numbers.fromBinary([1, 0, 1, 0])).toBe(10); // binary 1010
+        expect(Numbers.fromBinary([0, 0, 0, 0])).toBe(0); // binary 0000
+      });
+    });
   });
 });

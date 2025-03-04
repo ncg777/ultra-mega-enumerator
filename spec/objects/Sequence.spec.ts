@@ -157,4 +157,32 @@ describe('Sequence Class', () => {
         const result = Sequence.combine(Combiner.Convolution, Operation.Add, x, y);
         expect(result.toArray()).toEqual([13, 12, 14]); // Expected result based on convolution
     });
+    test('combine() with Combiner.Bits 1', () => {
+        const x = new Sequence(15, 15, 3);
+        const y = new Sequence(4, 5, 3);
+        
+        const result = Sequence.combine(Combiner.Bits, Operation.X, x, y);
+        expect(result.toArray()).toEqual([1,1,1,1,0,1,1,1,1,0,1,1]);
+    });
+    test('combine() with Combiner.Bits 2', () => {
+        const x = new Sequence(15, 15, 3);
+        const y = new Sequence(4, 5, -3);
+        
+        const result = Sequence.combine(Combiner.Bits, Operation.Y, x, y);
+        expect(result.toArray()).toEqual([8,4,2,1,16,8,4,2,1,1,2,4]);
+    });
+    test('combine() with Combiner.Trits 1', () => {
+        const x = new Sequence(5, 5, 5);
+        const y = new Sequence(3, 3, -3);
+        
+        const result = Sequence.combine(Combiner.Trits, Operation.X, x, y);
+        expect(result.toArray()).toEqual([1,-1,-1,1,-1,-1,-1,-1,1]);
+    });
+    test('combine() with Combiner.Trits 2', () => {
+        const x = new Sequence(5, 5, 1);
+        const y = new Sequence(3, 3, -3);
+        
+        const result = Sequence.combine(Combiner.Trits, Operation.Y, x, y);
+        expect(result.toArray()).toEqual([9,3,1,9,3,1,1,3,9]);
+    });
 });

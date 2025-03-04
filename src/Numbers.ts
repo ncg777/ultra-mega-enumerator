@@ -351,4 +351,76 @@ export class Numbers {
     
         return result >>> 0; // Ensure unsigned 32-bit integer
     }
+    static toBalancedTernary(n: number, nbdigits: number): number[] {
+        const digitCount = Math.abs(nbdigits);
+        const digits: number[] = [];
+        let remaining = n;
+    
+        // Process exactly 'digitCount' digits.
+        for (let i = 0; i < digitCount; i++) {
+          // Compute the remainder in a positive modulo sense.
+          let rem = ((remaining % 3) + 3) % 3;
+    
+          // Adjust remainder: in balanced ternary we want digits -1, 0, 1.
+          if (rem === 2) {
+            // Represent "2" as -1 with a carry.
+            rem = -1;
+            remaining = Math.floor((remaining + 1) / 3);
+          } else {
+            remaining = Math.floor(remaining / 3);
+          }
+    
+          digits.push(rem);
+        }
+    
+        // If k is positive, reverse to get big-endian order.
+        if (nbdigits > 0) {
+          digits.reverse();
+        }
+    
+        return digits;
+    }
+    static fromBalancedTernary(trits: number[]): number {
+        let o = 0;
+        for(let i=0;i < trits.length;i++) {
+            o+=trits[i]*Math.pow(3, (trits.length-1-i));
+        }
+        return o;
+    }
+    static toBinary(n: number, nbdigits: number): number[] {
+        if(nbdigits==0) return [];
+        let sign = n < 0 ? -1 : 1;
+        n *= sign;
+        const binary: number[] = [];
+        let num = Math.abs(n);
+    
+        while (num !== 0) {
+            const tmp = sign*(num % 2);
+            binary.push(tmp == 0 ? 0 : tmp);
+            num = Math.floor(num / 2);
+        }
+    
+        if (binary.length === 0) {
+            binary.push(0);
+        }
+    
+        while (binary.length < Math.abs(nbdigits)) {
+            binary.push(0);
+        }
+        if (binary.length > Math.abs(nbdigits)) {
+            binary.length = Math.abs(nbdigits);
+        }
+        if(nbdigits > 0)
+        {
+            binary.reverse();
+        }
+        return binary;
+    }
+    static fromBinary(bits: number[]): number {
+        let o = 0;
+        for(let i=0;i < bits.length;i++) {
+            o+=bits[i]*Math.pow(2, (bits.length-1-i));
+        }
+        return o;
+    }
 }

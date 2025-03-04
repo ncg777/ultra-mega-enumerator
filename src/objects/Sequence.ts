@@ -40,7 +40,8 @@ export enum Operation {
     ExpandBits = 'ExpandBits',
     ExpandBitsFill = 'ExpandBitsFill',
     CantorIntervalBinaryNumber = 'CantorIntervalBinaryNumber',
-    PermuteBits = 'PermuteBits'
+    PermuteBits = 'PermuteBits',
+    HardThreshold = 'HardThreshold'
   }
   
   // Define Combiner Enum
@@ -53,7 +54,9 @@ export enum Operation {
     LCM = 'LCM',
     Apply = 'Apply',
     Reduce = 'Reduce',
-    MixedRadix = 'Mixed Radix'
+    MixedRadix = 'Mixed Radix',
+    Bits = 'Bits',
+    Trits = 'Trits'
   }
   const ops = new Map<Operation, (x: number, y: number) => number>([
     [Operation.Add, (x, y) => x + y],
@@ -95,10 +98,11 @@ export enum Operation {
     [Operation.ExpandBitsFill, (x, y) => Numbers.expandBits(x,y,'bit')],
     [Operation.CantorIntervalBinaryNumber, (x,y) => Numbers.CantorIntervalBinaryNumber(x,y)],
     [Operation.PermuteBits, (x,y) => Numbers.permuteBits(x,y)],
-    [Operation.MaxZeroX, (x) => Math.max(0, x)],
-    [Operation.MinZeroX, (x) => Math.min(0, x)],
-    [Operation.MaxZeroY, (y) => Math.max(0, y)],
-    [Operation.MinZeroY, (y) => Math.min(0, y)],
+    [Operation.MaxZeroX, (x,y) => Math.max(0, x)],
+    [Operation.MinZeroX, (x,y) => Math.min(0, x)],
+    [Operation.MaxZeroY, (x,y) => Math.max(0, y)],
+    [Operation.MinZeroY, (x,y) => Math.min(0, y)],
+    [Operation.HardThreshold, (x, y) => Math.abs(x) > Math.abs(y) ? 0 : x],
   ]);
   
 export class Sequence{
@@ -445,6 +449,26 @@ export class Sequence{
                 row.map((value, index) => operationFn(value, y.get(index%y.size())!)).reduce((a,b) => a+b,0)
               );
               for(let z of combined) o.add(z);
+            }
+            break;
+        case Combiner.Bits:
+            for(let i=0;i<x.size();i++) {
+                let b = Numbers.toBinary(x.get(i)!,y.get(i)!);
+                for(let j=0;j<b.length;j++) {
+                    if (operationFn) {
+                        o.add(operationFn(b[j], Math.pow(2, y.get(i)! < 0 ? j : b.length-1-j)));
+                    }
+                }
+            }
+            break;
+        case Combiner.Trits:
+            for(let i=0;i<x.size();i++) {
+                let b = Numbers.toBalancedTernary(x.get(i)!,y.get(i)!);
+                for(let j=0;j<b.length;j++) {
+                    if (operationFn) {
+                        o.add(operationFn(b[j], Math.pow(3, y.get(i)! < 0 ? j : b.length-1-j)));
+                    }
+                }
             }
             break;
         }
