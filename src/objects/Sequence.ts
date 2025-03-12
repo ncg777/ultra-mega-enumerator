@@ -76,13 +76,13 @@ export enum Operation {
       return mod <= y ? mod : 2 * y - mod;
     }],
     [Operation.And, (x, y) => x & y],
-    [Operation.Nand, (x, y) => ~(x & y)],
+    //[Operation.Nand, (x, y) => ~(x & y)],
     [Operation.Or, (x, y) => x | y],
-    [Operation.Nor, (x, y) => ~(x | y)],
-    [Operation.Implication, (x, y) => (~x) | y],
-    [Operation.ReverseImplication, (x, y) => (~y) | x],
+    //[Operation.Nor, (x, y) => ~(x | y)],
+    //[Operation.Implication, (x, y) => (~x) | y],
+    //[Operation.ReverseImplication, (x, y) => (~y) | x],
     [Operation.Xor, (x, y) => x ^ y],
-    [Operation.Xnor, (x, y) => ~(x ^ y)],
+    //[Operation.Xnor, (x, y) => ~(x ^ y)],
     [Operation.ShiftLeft, (x, y) => x << y],
     [Operation.ShiftRight, (x, y) => x >> y],
     [Operation.LCM, (x, y) => Numbers.lcm(x, y)],
@@ -453,17 +453,17 @@ export class Sequence{
             break;
         case Combiner.Bits:
             for(let i=0;i<x.size();i++) {
-                let b = Numbers.toBinary(x.get(i)!,y.get(i)!);
+                let b = Numbers.toBinary(x.get(i)!,y.get(i%y.size())!);
                 for(let j=0;j<b.length;j++) {
                     if (operationFn) {
-                        o.add(operationFn(b[j], Math.pow(2, y.get(i)! < 0 ? j : b.length-1-j)));
+                        o.add(operationFn(b[j], Math.pow(2, y.get(i%y.size())! < 0 ? j : b.length-1-j)));
                     }
                 }
             }
             break;
         case Combiner.Trits:
             for(let i=0;i<x.size();i++) {
-                let b = Numbers.toBalancedTernary(x.get(i)!,y.get(i)!);
+                let b = Numbers.toBalancedTernary(x.get(i)!,y.get(i%y.size())!);
                 for(let j=0;j<b.length;j++) {
                     if (operationFn) {
                         o.add(operationFn(b[j], Math.pow(3, y.get(i)! < 0 ? j : b.length-1-j)));

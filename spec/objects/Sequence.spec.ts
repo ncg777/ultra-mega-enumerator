@@ -171,6 +171,13 @@ describe('Sequence Class', () => {
         const result = Sequence.combine(Combiner.Bits, Operation.Y, x, y);
         expect(result.toArray()).toEqual([8,4,2,1,16,8,4,2,1,1,2,4]);
     });
+    test('combine() with Combiner.Bits 3', () => {
+        const x = new Sequence(15, 15, 3);
+        const y = new Sequence(4);
+        
+        const result = Sequence.combine(Combiner.Bits, Operation.Y, x, y);
+        expect(result.toArray()).toEqual([8,4,2,1,8,4,2,1,8,4,2,1]);
+    });
     test('combine() with Combiner.Trits 1', () => {
         const x = new Sequence(5, 5, 5);
         const y = new Sequence(3, 3, -3);
@@ -184,5 +191,12 @@ describe('Sequence Class', () => {
         
         const result = Sequence.combine(Combiner.Trits, Operation.Y, x, y);
         expect(result.toArray()).toEqual([9,3,1,9,3,1,1,3,9]);
+    });
+    test('combine() with Combiner.Trits 3', () => {
+        const x = new Sequence(5, 5, 1);
+        const y = new Sequence(3);
+        
+        const result = Sequence.combine(Combiner.Trits, Operation.Y, x, y);
+        expect(result.toArray()).toEqual([9,3,1,9,3,1,9,3,1]);
     });
 });
