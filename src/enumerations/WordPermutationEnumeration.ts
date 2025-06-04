@@ -74,6 +74,6 @@ export class WordPermutationEnumeration extends AbstractEnumeration<number[]> {
         }
       }
     }
-    return x;
+    return x.reverse();
   }
 }

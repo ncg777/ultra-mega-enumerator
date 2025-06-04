@@ -1,5 +1,9 @@
 import path from 'path';
-import { Configuration } from 'webpack';
+import { fileURLToPath } from 'url';
+import type { Configuration } from 'webpack';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const config: Configuration = {
   mode: 'production', // or 'development'
