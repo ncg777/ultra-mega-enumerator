@@ -298,28 +298,17 @@ export class PCS12 extends ImmutableCombination {
     return Math.pow(o, 1.0 / s.length);
   }
 
-  public getPotentialKeys(): number[] {
-    const ct: number[] = Array.from({ length: 12 }, (_, n) => this.calcCenterTuning(n));
-    let min = Number.MAX_VALUE;
-
-    // Find the minimum distance to 1.0
-    for (const d of ct) {
-        if (Math.abs(d - 1.0) < min) {
-            min = Math.abs(d - 1.0);
-        }
-    }
-
-    const keys = [];
-
-    // Collect keys that have the minimum distance
-    for (let i = 0; i < ct.length; i++) {
-        if (Math.abs(ct[i] - 1.0) <= min) {
-            keys.push(i);
-        }
-    }
-    
-    return keys;
+  getTensionPartition(): number[] {
+    const ct = this.asSequence().map((n: number) => this.calcCenterTuning(n));
+    // Get unique |1.0 - d| values, sorted
+    const values = Array.from(new Set(ct.map(d => Math.abs(1.0 - d)))).sort((a, b) => a - b);
+    // Map each unique value to an index
+    const map = new Map<number, number>();
+    values.forEach((d, i) => map.set(d, i));
+    // Build the output sequence
+    return ct.map(d => map.get(Math.abs(1.0 - d))!);
   }
+
   private static _isInitializing: boolean = false;
   public static async init(): Promise<void> {
     if (this._isInitialized) {
