@@ -19,15 +19,14 @@ export enum Operation {
     Modulo = 'Modulo',
     Bounce = 'Bounce',
     And = 'And',
-    //Nand = 'Nand',
+    Nand = 'Nand',
     Or = 'Or',
-    //Nor = 'Nor',
-    //Implication = 'Implication',
-    //ReverseImplication = 'ReverseImplication',
+    Nor = 'Nor',
+    Implication = 'Implication',
+    ReverseImplication = 'ReverseImplication',
     Xor = 'Xor',
-    //Xnor = 'Xnor',
-    ShiftLeft = 'ShiftLeft',
-    ShiftRight = 'ShiftRight',
+    Xnor = 'Xnor',
+    ShiftBits = 'ShiftBits',
     LCM = 'LCM',
     GCD = 'GCD',
     Equal = 'Equal',
@@ -41,7 +40,8 @@ export enum Operation {
     ExpandBitsFill = 'ExpandBitsFill',
     CantorIntervalBinaryNumber = 'CantorIntervalBinaryNumber',
     PermuteBits = 'PermuteBits',
-    HardThreshold = 'HardThreshold'
+    HardThreshold = 'HardThreshold',
+    RandInt = 'RandInt'
   }
   
   // Define Combiner Enum
@@ -58,6 +58,67 @@ export enum Operation {
     Bits = 'Bits',
     Trits = 'Trits'
   }
+  function maxBinaryDigits(a: number, b: number): number {
+    const absA = Math.abs(a);
+    const absB = Math.abs(b);
+    // Special case: 0 requires 1 digit
+    const digitsA = absA === 0 ? 1 : Math.floor(Math.log2(absA)) + 1;
+    const digitsB = absB === 0 ? 1 : Math.floor(Math.log2(absB)) + 1;
+    return Math.max(digitsA, digitsB);
+  }
+
+function applyBitwise(
+    x: number,
+    y: number,
+    op: (a: boolean, b: boolean) => boolean
+): number {
+    const nbdigits = maxBinaryDigits(x, y);
+    const bx = Numbers.toBinary(x, nbdigits);
+    const by = Numbers.toBinary(y, nbdigits);
+
+    // Map -1/1 to true, 0 to false
+    const boolx = bx.map(bit => bit !== 0);
+    const booly = by.map(bit => bit !== 0);
+
+    // Apply the boolean operation bitwise
+    const resultBool = boolx.map((b, i) => op(b, booly[i]));
+
+    // Map booleans back to 1 (true) and 0 (false)
+    const resultBits = resultBool.map(b => b ? 1 : 0);
+    
+    let signX = Math.sign(x);
+    signX = signX === 0 ? 1 :signX;
+
+    let signY = Math.sign(y);
+    signY = signY === 0 ? 1 :signY;
+
+    // The sign is the product of the signs of x and y
+    const sign = signX * signY;
+
+    // Convert back to integer
+    const result = sign*Numbers.fromBinary(resultBits);
+    
+    return result == -0 ? 0 : result;
+  }
+
+  /**
+ * Shifts the bits of a number left or right using Numbers.toBinary and Numbers.fromBinary.
+ * @param n The number to shift.
+ * @param positions The number of positions to shift (positive = left, negative = right).
+ * @returns The shifted number.
+ */
+function shift(n: number, positions: number): number {
+    if (positions === 0) return n;
+    if (positions > 0) {
+        return n * Math.pow(2, positions);
+    } else {
+        // Arithmetic shift for negative numbers, logical for positive
+        return n >= 0
+            ? Math.floor(n / Math.pow(2, -positions))
+            : -Math.floor(Math.abs(n) / Math.pow(2, -positions));
+    }
+}
+
   const ops = new Map<Operation, (x: number, y: number) => number>([
     [Operation.Add, (x, y) => x + y],
     [Operation.Subtract, (x, y) => x - y],
@@ -75,16 +136,15 @@ export enum Operation {
       const mod = x % (2 * y);
       return mod <= y ? mod : 2 * y - mod;
     }],
-    [Operation.And, (x, y) => x & y],
-    //[Operation.Nand, (x, y) => ~(x & y)],
-    [Operation.Or, (x, y) => x | y],
-    //[Operation.Nor, (x, y) => ~(x | y)],
-    //[Operation.Implication, (x, y) => (~x) | y],
-    //[Operation.ReverseImplication, (x, y) => (~y) | x],
-    [Operation.Xor, (x, y) => x ^ y],
-    //[Operation.Xnor, (x, y) => ~(x ^ y)],
-    [Operation.ShiftLeft, (x, y) => x << y],
-    [Operation.ShiftRight, (x, y) => x >> y],
+    [Operation.And, (x, y) => applyBitwise(x,y, (a,b) => a && b)],
+    [Operation.Nand, (x, y) => applyBitwise(x,y, (a,b) => !(a && b))],
+    [Operation.Or, (x, y) => applyBitwise(x,y, (a,b) => a || b)],
+    [Operation.Nor, (x, y) => applyBitwise(x,y, (a,b) => !(a || b))],
+    [Operation.Implication, (x, y) => applyBitwise(x,y, (a,b) => (!a) || b)],
+    [Operation.ReverseImplication, (x, y) => applyBitwise(x,y, (a,b) => (!b) || a)],
+    [Operation.Xor, (x, y) => applyBitwise(x,y, (a,b) => a !== b)],
+    [Operation.Xnor, (x, y) => applyBitwise(x,y, (a,b) => a === b)],
+    [Operation.ShiftBits, (x, y) => shift(x, y)],
     [Operation.LCM, (x, y) => Numbers.lcm(x, y)],
     [Operation.GCD, (x, y) => Numbers.gcd(x, y)],
     [Operation.Equal, (x, y) => (x === y ? 1 : 0)],
@@ -103,6 +163,11 @@ export enum Operation {
     [Operation.MaxZeroY, (x,y) => Math.max(0, y)],
     [Operation.MinZeroY, (x,y) => Math.min(0, y)],
     [Operation.HardThreshold, (x, y) => Math.abs(x) > Math.abs(y) ? 0 : x],
+    [Operation.RandInt, (x,y) => {
+        let a = Math.min(x,y);
+        let b = Math.max(x,y);
+        return Math.floor(a+(Math.random()*(b-a+1)));
+    }],
   ]);
   
 export class Sequence{

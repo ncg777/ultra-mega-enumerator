@@ -393,7 +393,7 @@ export class Numbers {
         n *= sign;
         const binary: number[] = [];
         let num = Math.abs(n);
-    
+
         while (num !== 0) {
             const tmp = sign*(num % 2);
             binary.push(tmp == 0 ? 0 : tmp);

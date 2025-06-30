@@ -82,6 +82,8 @@ describe('Numbers Class Tests', () => {
         expect(Numbers.toBinary(5, 5)).toEqual([0, 0, 1, 0, 1]);
         expect(Numbers.toBinary(-5, 5)).toEqual([0, 0, -1, 0, -1]);
         expect(Numbers.toBinary(0, 3)).toEqual([0, 0, 0]);
+        expect(Numbers.toBinary(0, 1)).toEqual([0]);
+        expect(Numbers.toBinary(-1, 1)).toEqual([-1]);
       });
   
       test('fromBinary converts correctly', () => {

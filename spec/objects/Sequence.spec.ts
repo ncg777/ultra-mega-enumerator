@@ -199,4 +199,91 @@ describe('Sequence Class', () => {
         const result = Sequence.combine(Combiner.Trits, Operation.Y, x, y);
         expect(result.toArray()).toEqual([9,3,1,9,3,1,9,3,1]);
     });
+    test('combine() with bitwise AND', () => {
+        const x = new Sequence(6, -5, 0, 7);
+        const y = new Sequence(3, 2, -1, 7);
+        // 6 & 3 = 2, -5 & 2 = -0b101 & 0b10 = -0b0 = 0, 0 & -1 = 0, 7 & 7 = 7
+        const result = Sequence.combine(Combiner.Recycle, Operation.And, x, y);
+        expect(result.toArray()).toEqual([2, 0, 0, 7]);
+    });
+
+    test('combine() with bitwise OR', () => {
+        const x = new Sequence(6, -5, 0, 7);
+        const y = new Sequence(3, 2, -1, 7);
+        // 6 | 3 = 7, -5 | 2 = -0b101 | 0b10 = -0b111, 0 | -1 = -1, 7 | 7 = 7
+        const result = Sequence.combine(Combiner.Recycle, Operation.Or, x, y);
+        expect(result.toArray()).toEqual([7, -7, -1, 7]);
+    });
+
+    test('combine() with bitwise XOR', () => {
+        const x = new Sequence(6, -5, 0, 7);
+        const y = new Sequence(3, 2, -1, 7);
+        // 6 ^ 3 = 5, -5 ^ 2 = -0b101 ^ 0b10 = -0b101 ^ 0b010 = -0b111 = -7, 0 ^ -1 = -1, 7 ^ 7 = 0
+        const result = Sequence.combine(Combiner.Recycle, Operation.Xor, x, y);
+        expect(result.toArray()).toEqual([5, -7, -1, 0]);
+    });
+
+    test('combine() with bitwise NAND', () => {
+        const x = new Sequence(6, -5, 0, 7);
+        const y = new Sequence(3, 2, -1, 7);
+        // 6 NAND 3 = ~(6 & 3) = ~2 = 5, -5 NAND 2 = ~0 = -7, 0 NAND -1 = ~0 = -1, 7 NAND 7 = ~7 = 0
+        const result = Sequence.combine(Combiner.Recycle, Operation.Nand, x, y);
+        expect(result.toArray()).toEqual([5, -7, -1, 0]);
+    });
+
+    test('combine() with bitwise NOR', () => {
+        const x = new Sequence(6, -5, 0, 7);
+        const y = new Sequence(3, 2, -1, 7);
+        // 6 NOR 3 = ~(6 | 3) = ~7 = 0, -5 NOR 2 = ~(-7) = 0, 0 NOR -1 = ~(-1) = 0, 7 NOR 7 = ~7 = 0
+        const result = Sequence.combine(Combiner.Recycle, Operation.Nor, x, y);
+        expect(result.toArray()).toEqual([0, 0, 0, 0]);
+    });
+
+    test('combine() with bitwise XNOR', () => {
+        const x = new Sequence(6, -5, 0, 7);
+        const y = new Sequence(3, 2, -1, 7);
+        // 6 XNOR 3 = ~(6 ^ 3) = ~5 = 2, -5 XNOR 2 = ~(-7) = 6, 0 XNOR -1 = ~(-1) = 0, 7 XNOR 7 = ~0 = 7
+        const result = Sequence.combine(Combiner.Recycle, Operation.Xnor, x, y);
+        expect(result.toArray()).toEqual([2, 0, 0, 7]);
+    });
+
+    test('combine() with bitwise implication', () => {
+        const x = new Sequence(6, 0, 1);
+        const y = new Sequence(3, 1, 0);
+        // implication: (!a) | b
+        const result = Sequence.combine(Combiner.Recycle, Operation.Implication, x, y);
+        expect(result.toArray()).toEqual([3, 1, 0]);
+    });
+
+    test('combine() with bitwise reverse implication', () => {
+        const x = new Sequence(6, 0, 1);
+        const y = new Sequence(3, 1, 0);
+        // reverse implication: (!b) | a
+        const result = Sequence.combine(Combiner.Recycle, Operation.ReverseImplication, x, y);
+        expect(result.toArray()).toEqual([6, 0, 1]);
+    });
+
+    test('combine() with ShiftBits (left shift)', () => {
+        const x = new Sequence(3, 5, 7);
+        const y = new Sequence(1, 2, 3);
+        // 3 << 1 = 6, 5 << 2 = 20, 7 << 3 = 56
+        const result = Sequence.combine(Combiner.Recycle, Operation.ShiftBits, x, y);
+        expect(result.toArray()).toEqual([6, 20, 56]);
+    });
+
+    test('combine() with ShiftBits (right shift)', () => {
+        const x = new Sequence(8, 16, 32);
+        const y = new Sequence(-1, -2, -3);
+        // 8 >> 1 = 4, 16 >> 2 = 4, 32 >> 3 = 4
+        const result = Sequence.combine(Combiner.Recycle, Operation.ShiftBits, x, y);
+        expect(result.toArray()).toEqual([4, 4, 4]);
+    });
+
+    test('combine() with ShiftBits (zero and negative)', () => {
+        const x = new Sequence(0, -8, 15);
+        const y = new Sequence(2, -1, 0);
+        // 0 << 2 = 0, -8 >> 1 = -4, 15 << 0 = 15
+        const result = Sequence.combine(Combiner.Recycle, Operation.ShiftBits, x, y);
+        expect(result.toArray()).toEqual([0, -4, 15]);
+    });
 });
