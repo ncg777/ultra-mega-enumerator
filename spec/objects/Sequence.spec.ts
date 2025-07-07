@@ -121,17 +121,17 @@ describe('Sequence Class', () => {
 
     test('combine() with Combiner.Apply should return the correct result based on applying operation', () => {
         const x = new Sequence(1, 2);
-        const y = new Sequence(0, 1);
+        const y = new Sequence(0, -1);
         
-        const result = Sequence.combine(Combiner.Apply, Operation.Add, x, y);
-        expect(result.toArray()).toEqual([1, 3]); // Expected: 1+0, 2+1
+        const result = Sequence.combine(Combiner.Apply, Operation.X, x, y);
+        expect(result.toArray()).toEqual([1, 2]);
     });
 
-    test('combine() with Combiner.LCM should return the correct result for LCM combining', () => {
+    test('combine() with Combiner.Divisive should return the correct result for divisive combining', () => {
         const x = new Sequence(1, 2);
         const y = new Sequence(2, 3);
         
-        const result = Sequence.combine(Combiner.LCM, Operation.Add, x, y);
+        const result = Sequence.combine(Combiner.Divisive, Operation.Add, x, y);
         expect(result.toArray()).toEqual([3, 5]); // Expected: 1+2, 2+3
     });
 
@@ -141,6 +141,14 @@ describe('Sequence Class', () => {
         
         const result = Sequence.combine(Combiner.Recycle, Operation.Add, x, y);
         expect(result.toArray()).toEqual([4, 6]); // Expected result based on recycling with addition
+    });
+
+    test('combine() with Combiner.IterateBetween should return the correct result based on iteration', () => {
+        const x = new Sequence(0, 4);
+        const y = new Sequence(4, -4);
+        
+        const result = Sequence.combine(Combiner.IterateBetween, Operation.X, x, y);
+        expect(result.toArray()).toEqual([0,1,2,3,4,3,2,1,0,-1,-2,-3]);
     });
 
     test('combine() with Combiner.MixedRadix should return the correct result based on mixed radix', () => {

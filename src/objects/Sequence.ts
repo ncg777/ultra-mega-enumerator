@@ -47,16 +47,17 @@ export enum Operation {
   // Define Combiner Enum
   export enum Combiner {
     Product = 'Product',
+    Divisive = 'Divisive',
     NegativeProduct = 'NegativeProduct',
     Convolution = 'Convolution',
     Triangular = 'Triangular',
     Recycle = 'Recycle',
-    LCM = 'LCM',
     Apply = 'Apply',
     Reduce = 'Reduce',
     MixedRadix = 'Mixed Radix',
     Bits = 'Bits',
-    Trits = 'Trits'
+    Trits = 'Trits',
+    IterateBetween = 'IterateBetween'
   }
   function maxBinaryDigits(a: number, b: number): number {
     const absA = Math.abs(a);
@@ -416,11 +417,14 @@ export class Sequence{
           case Combiner.Apply:
             for (let i = 0; i < y.size(); i++) {    
               if (operationFn) {
-                o.add(operationFn(x.get(y.get(i)! % x.size())!, y.get(i % y.size())!));
+                let index:number = y.get(i)!;
+                while(index < 0) index+=x.size();
+                while(index >= x.size()) index-=x.size();
+                o.add(operationFn(x.get(index)!, y.get(i % y.size())!));
               }
             }
             break;
-          case Combiner.LCM:
+          case Combiner.Divisive:
             for (let i = 0; i < lcm; i++) {    
               if (operationFn) {
                 o.add(operationFn(x.get(i/(lcm/x.size())>>0)!, y.get(i/(lcm/y.size())>>0)!));
@@ -432,6 +436,21 @@ export class Sequence{
               if (operationFn) {
                 o.add(operationFn(x.get(i%x.size())!, y.get(i%y.size())!));
               }
+            }
+            break;
+        case Combiner.IterateBetween:
+            for (let i = 0; i < lcm; i++) {
+                let d = Math.abs(y.get(i%y.size())!-x.get(i%x.size())!);
+                let delta = 1;
+                if(y.get(i%y.size())!<x.get(i%x.size())!) delta = -1;
+                for(let j=0;j<d;j++) {
+                    let a = x.get(i%x.size())!+j*delta;
+                    let b = y.get(i%y.size())!+j*(-delta);
+                    if(j==0) b=a;
+                    if (operationFn) {
+                        o.add(operationFn(a,b));
+                    }
+                }
             }
             break;
           case Combiner.Product:
