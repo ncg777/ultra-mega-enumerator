@@ -494,7 +494,7 @@ export class Sequence {
                         for (let i = 0; i < x.size(); i++) {
                             if (z == 0) o.add(0);
                             else if (operationFn) {
-                                o.set((((i * y.size()) - (y.size() - 1) + j) + o.size()) % o.size(), operationFn(x.get(i)!, y.get(j)!));
+                                o.set((((j * x.size()) - (x.size() - 1) + i) + o.size()) % o.size(), operationFn(x.get(i)!, y.get(j)!));
                             }
                         }
                     }
