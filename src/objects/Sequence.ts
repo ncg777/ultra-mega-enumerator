@@ -28,6 +28,7 @@ export enum Operation {
     Xor = 'Xor',
     Xnor = 'Xnor',
     ShiftBits = 'ShiftBits',
+    ProjectBits = 'ProjectBits',
     LCM = 'LCM',
     GCD = 'GCD',
     Equal = 'Equal',
@@ -42,7 +43,8 @@ export enum Operation {
     CantorIntervalBinaryNumber = 'CantorIntervalBinaryNumber',
     PermuteBits = 'PermuteBits',
     HardThreshold = 'HardThreshold',
-    RandInt = 'RandInt'
+    RandInt = 'RandInt',
+    
 }
 
 // Define Combiner Enum
@@ -124,6 +126,40 @@ function shift(n: number, positions: number): number {
     }
 }
 
+function projectBits(a:number, b:number) {
+    const absA:number = Math.abs(a);
+    const absB:number = Math.abs(b);
+    
+    const nbDigits:number = absB == 0 ? 1 : (Math.floor(Math.log(absB) / Math.log(2)) + 1);
+    
+    const binA = Numbers.toBinary(absA, nbDigits);
+    const binB = Numbers.toBinary(absB, nbDigits);
+    
+    const oArr = new Array<number>(nbDigits).fill(0);
+    
+    let cursor = 0;
+    for(let i=nbDigits-1;i>=0;i--) {
+      if(binB[i] == 1) {
+        if(cursor < binA.length && binA[nbDigits-cursor++-1] == 1) {
+          oArr[i] = 1; 
+        }
+      }
+    }
+
+    const o = Numbers.fromBinary(oArr);
+
+    let signA = Math.sign(a);
+    signA = signA === 0 ? 1 : signA;
+
+    let signB = Math.sign(b);
+    signB = signB === 0 ? 1 : signB;
+
+    // The sign is the product of the signs of x and y
+    const sign = signA * signB;
+
+    return o * sign === -0 ? 0 : o * sign;
+  }
+
 const ops = new Map<Operation, (x: number, y: number) => number>([
     [Operation.Add, (x, y) => x + y],
     [Operation.Subtract, (x, y) => x - y],
@@ -151,6 +187,7 @@ const ops = new Map<Operation, (x: number, y: number) => number>([
     [Operation.Xor, (x, y) => applyBitwise(x, y, (a, b) => a !== b)],
     [Operation.Xnor, (x, y) => applyBitwise(x, y, (a, b) => a === b)],
     [Operation.ShiftBits, (x, y) => shift(x, y)],
+    [Operation.ProjectBits, (x, y) => projectBits(x,y)],
     [Operation.LCM, (x, y) => Numbers.lcm(x, y)],
     [Operation.GCD, (x, y) => Numbers.gcd(x, y)],
     [Operation.Equal, (x, y) => (x === y ? 1 : 0)],

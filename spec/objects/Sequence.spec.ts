@@ -294,4 +294,10 @@ describe('Sequence Class', () => {
         const result = Sequence.combine(Combiner.Recycle, Operation.ShiftBits, x, y);
         expect(result.toArray()).toEqual([0, -4, 15]);
     });
+    test('combine() with ProjectBits', () => {
+        const x = new Sequence(0,1,2,3);
+        const y = new Sequence(5,-5,0);
+        const result = Sequence.combine(Combiner.Product, Operation.ProjectBits, x, y);
+        expect(result.toArray()).toEqual([0,0,0,1,-1,0,4,-4,0,5,-5,0]);
+    });
 });
