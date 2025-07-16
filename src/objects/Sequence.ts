@@ -44,6 +44,9 @@ export enum Operation {
     PermuteBits = 'PermuteBits',
     HardThreshold = 'HardThreshold',
     RandInt = 'RandInt',
+    IterateBetween = 'IterateBetween',
+    Bits = 'Bits',
+    Trits = 'Trits',
     
 }
 
@@ -52,8 +55,6 @@ export enum Combiner {
     Product = 'Product',
     SwappedProduct = 'SwappedProduct',
     Divisive = 'Divisive',
-    NegativeProduct = 'NegativeProduct',
-    SwappedNegativeProduct = 'SwappedNegativeProduct',
     Convolution = 'Convolution',
     Triangular = 'Triangular',
     SwappedTriangular = 'SwappedTriangular',
@@ -61,9 +62,6 @@ export enum Combiner {
     Apply = 'Apply',
     Reduce = 'Reduce',
     MixedRadix = 'Mixed Radix',
-    Bits = 'Bits',
-    Trits = 'Trits',
-    IterateBetween = 'IterateBetween'
 }
 function maxBinaryDigits(a: number, b: number): number {
     const absA = Math.abs(a);
@@ -160,57 +158,65 @@ function projectBits(a:number, b:number) {
     return o * sign === -0 ? 0 : o * sign;
   }
 
-const ops = new Map<Operation, (x: number, y: number) => number>([
-    [Operation.Add, (x, y) => x + y],
-    [Operation.Subtract, (x, y) => x - y],
-    [Operation.Multiply, (x, y) => x * y],
-    [Operation.Divide, (x, y) => y !== 0 ? Math.floor(x / y) : 0],
-    [Operation.X, (x, y) => x],
-    [Operation.Y, (x, y) => y],
-    [Operation.Power, (x, y) => Math.round(Math.pow(x, y))],
-    [Operation.Log, (x, y) => y > 1 && x > 0 ? Math.floor(Math.log(x) / Math.log(y)) : 0],
-    [Operation.Min, (x, y) => Math.min(x, y)],
-    [Operation.Max, (x, y) => Math.max(x, y)],
-    [Operation.Modulo, (x, y) => y !== 0 ? x % y : 0],
+const ops = new Map<Operation, (x: number, y: number) => number[]>([
+    [Operation.Add, (x, y) => [x + y]],
+    [Operation.Subtract, (x, y) => [x - y]],
+    [Operation.Multiply, (x, y) => [x * y]],
+    [Operation.Divide, (x, y) => [y !== 0 ? Math.floor(x / y) : 0]],
+    [Operation.X, (x, y) => [x]],
+    [Operation.Y, (x, y) => [y]],
+    [Operation.Power, (x, y) => [Math.round(Math.pow(x, y))]],
+    [Operation.Log, (x, y) => [y > 1 && x > 0 ? Math.floor(Math.log(x) / Math.log(y)) : 0]],
+    [Operation.Min, (x, y) => [Math.min(x, y)]],
+    [Operation.Max, (x, y) => [Math.max(x, y)]],
+    [Operation.Modulo, (x, y) => [y !== 0 ? x % y : 0]],
     [Operation.Bounce, (x, y) => {
-        if (y === 0) return 0;
+        if (y === 0) return [0];
         const mod = x % (2 * y);
-        return mod <= y ? mod : 2 * y - mod;
+        return [mod <= y ? mod : 2 * y - mod];
     }],
-    [Operation.Distance, (x, y) => Math.abs(y - x)],
-    [Operation.And, (x, y) => applyBitwise(x, y, (a, b) => a && b)],
-    [Operation.Nand, (x, y) => applyBitwise(x, y, (a, b) => !(a && b))],
-    [Operation.Or, (x, y) => applyBitwise(x, y, (a, b) => a || b)],
-    [Operation.Nor, (x, y) => applyBitwise(x, y, (a, b) => !(a || b))],
-    [Operation.Implication, (x, y) => applyBitwise(x, y, (a, b) => (!a) || b)],
-    [Operation.ReverseImplication, (x, y) => applyBitwise(x, y, (a, b) => (!b) || a)],
-    [Operation.Xor, (x, y) => applyBitwise(x, y, (a, b) => a !== b)],
-    [Operation.Xnor, (x, y) => applyBitwise(x, y, (a, b) => a === b)],
-    [Operation.ShiftBits, (x, y) => shift(x, y)],
-    [Operation.ProjectBits, (x, y) => projectBits(x,y)],
-    [Operation.LCM, (x, y) => Numbers.lcm(x, y)],
-    [Operation.GCD, (x, y) => Numbers.gcd(x, y)],
-    [Operation.Equal, (x, y) => (x === y ? 1 : 0)],
-    [Operation.NotEqual, (x, y) => (x !== y ? 1 : 0)],
-    [Operation.LessThan, (x, y) => (x < y ? 1 : 0)],
-    [Operation.LessThanOrEqual, (x, y) => (x <= y ? 1 : 0)],
-    [Operation.GreaterThan, (x, y) => (x > y ? 1 : 0)],
-    [Operation.GreaterThanOrEqual, (x, y) => (x >= y ? 1 : 0)],
-    [Operation.Binomial, (x, y) => Numbers.binomial(x, y)],
-    [Operation.ExpandBits, (x, y) => Numbers.expandBits(x, y, '0')],
-    [Operation.ExpandBitsFill, (x, y) => Numbers.expandBits(x, y, 'bit')],
-    [Operation.CantorIntervalBinaryNumber, (x, y) => Numbers.CantorIntervalBinaryNumber(x, y)],
-    [Operation.PermuteBits, (x, y) => Numbers.permuteBits(x, y)],
-    [Operation.MaxZeroX, (x, y) => Math.max(0, x)],
-    [Operation.MinZeroX, (x, y) => Math.min(0, x)],
-    [Operation.MaxZeroY, (x, y) => Math.max(0, y)],
-    [Operation.MinZeroY, (x, y) => Math.min(0, y)],
-    [Operation.HardThreshold, (x, y) => Math.abs(x) > Math.abs(y) ? 0 : x],
+    [Operation.Distance, (x, y) => [Math.abs(y - x)]],
+    [Operation.And, (x, y) => [applyBitwise(x, y, (a, b) => a && b)]],
+    [Operation.Nand, (x, y) => [applyBitwise(x, y, (a, b) => !(a && b))]],
+    [Operation.Or, (x, y) => [applyBitwise(x, y, (a, b) => a || b)]],
+    [Operation.Nor, (x, y) => [applyBitwise(x, y, (a, b) => !(a || b))]],
+    [Operation.Implication, (x, y) => [applyBitwise(x, y, (a, b) => (!a) || b)]],
+    [Operation.ReverseImplication, (x, y) => [applyBitwise(x, y, (a, b) => (!b) || a)]],
+    [Operation.Xor, (x, y) => [applyBitwise(x, y, (a, b) => a !== b)]],
+    [Operation.Xnor, (x, y) => [applyBitwise(x, y, (a, b) => a === b)]],
+    [Operation.ShiftBits, (x, y) => [shift(x, y)]],
+    [Operation.ProjectBits, (x, y) => [projectBits(x,y)]],
+    [Operation.LCM, (x, y) => [Numbers.lcm(x, y)]],
+    [Operation.GCD, (x, y) => [Numbers.gcd(x, y)]],
+    [Operation.Equal, (x, y) => [(x === y ? 1 : 0)]],
+    [Operation.NotEqual, (x, y) => [(x !== y ? 1 : 0)]],
+    [Operation.LessThan, (x, y) => [(x < y ? 1 : 0)]],
+    [Operation.LessThanOrEqual, (x, y) => [(x <= y ? 1 : 0)]],
+    [Operation.GreaterThan, (x, y) => [(x > y ? 1 : 0)]],
+    [Operation.GreaterThanOrEqual, (x, y) => [(x >= y ? 1 : 0)]],
+    [Operation.Binomial, (x, y) => [Numbers.binomial(x, y)]],
+    [Operation.ExpandBits, (x, y) => [Numbers.expandBits(x, y, '0')]],
+    [Operation.ExpandBitsFill, (x, y) => [Numbers.expandBits(x, y, 'bit')]],
+    [Operation.CantorIntervalBinaryNumber, (x, y) => [Numbers.CantorIntervalBinaryNumber(x, y)]],
+    [Operation.PermuteBits, (x, y) => [Numbers.permuteBits(x, y)]],
+    [Operation.HardThreshold, (x, y) => [Math.abs(x) > Math.abs(y) ? 0 : x]],
     [Operation.RandInt, (x, y) => {
         let a = Math.min(x, y);
         let b = Math.max(x, y);
-        return Math.floor(a + (Math.random() * (b - a + 1)));
+        return [Math.floor(a + (Math.random() * (b - a + 1)))];
     }],
+    [Operation.IterateBetween, (x,y) => {
+        let d = Math.abs(y - x);
+        let delta = 1;
+        if (y < x) delta = -1;
+        const o:number[] = [];
+        for (let j = 0; j < d; j++) {
+            o.push(x + j * delta);
+        }
+        return o;
+    }],
+    [Operation.Bits, (x,y) => Numbers.toBinary(x, y)],
+    [Operation.Trits, (x,y) => Numbers.toBalancedTernary(x, y)],
 ]);
 
 export class Sequence {
@@ -235,6 +241,10 @@ export class Sequence {
     }
     set(index: number, value: number): void {
         this.items[index] = value;
+    }
+    concat(n:number[]):number[] {
+        this.items = this.items.concat(n);
+        return this.items;
     }
     toArray(): number[] {
         return this.items;
@@ -462,36 +472,21 @@ export class Sequence {
                         let index: number = y.get(i)!;
                         while (index < 0) index += x.size();
                         while (index >= x.size()) index -= x.size();
-                        o.add(operationFn(x.get(index)!, y.get(i % y.size())!));
+                        o.concat(operationFn(x.get(index)!, y.get(i % y.size())!));
                     }
                 }
                 break;
             case Combiner.Divisive:
                 for (let i = 0; i < lcm; i++) {
                     if (operationFn) {
-                        o.add(operationFn(x.get(i / (lcm / x.size()) >> 0)!, y.get(i / (lcm / y.size()) >> 0)!));
+                        o.concat(operationFn(x.get(i / (lcm / x.size()) >> 0)!, y.get(i / (lcm / y.size()) >> 0)!));
                     }
                 }
                 break;
             case Combiner.Recycle:
                 for (let i = 0; i < lcm; i++) {
                     if (operationFn) {
-                        o.add(operationFn(x.get(i % x.size())!, y.get(i % y.size())!));
-                    }
-                }
-                break;
-            case Combiner.IterateBetween:
-                for (let i = 0; i < lcm; i++) {
-                    let d = Math.abs(y.get(i % y.size())! - x.get(i % x.size())!);
-                    let delta = 1;
-                    if (y.get(i % y.size())! < x.get(i % x.size())!) delta = -1;
-                    for (let j = 0; j < d; j++) {
-                        let a = x.get(i % x.size())! + j * delta;
-                        let b = y.get(i % y.size())! + j * (-delta);
-                        if (j == 0) b = a;
-                        if (operationFn) {
-                            o.add(operationFn(a, b));
-                        }
+                        o.concat(operationFn(x.get(i % x.size())!, y.get(i % y.size())!));
                     }
                 }
                 break;
@@ -499,7 +494,7 @@ export class Sequence {
                 for (let i = 0; i < x.size(); i++) {
                     for (let j = 0; j < y.size(); j++) {
                         if (operationFn) {
-                            o.add(operationFn(x.get(i)!, y.get(j)!));
+                            o.concat(operationFn(x.get(i)!, y.get(j)!));
                         }
                     }
                 }
@@ -508,31 +503,26 @@ export class Sequence {
                 for (let j = 0; j < y.size(); j++) {
                     for (let i = 0; i < x.size(); i++) {
                         if (operationFn) {
-                            o.add(operationFn(x.get(i)!, y.get(j)!));
+                            o.concat(operationFn(x.get(i)!, y.get(j)!));
                         }
                     }
                 }
                 break;
-            case Combiner.NegativeProduct:
-                for (let z = 0; z < 2; z++) {
-                    for (let i = 0; i < x.size(); i++) {
-                        for (let j = 0; j < y.size(); j++) {
-                            if (z == 0) o.add(0);
-                            else if (operationFn) {
-                                o.set((((i * y.size()) - (y.size() - 1) + j) + o.size()) % o.size(), operationFn(x.get(i)!, y.get(j)!));
-                            }
-                        }
-                    }
-                }
-                break;
-            case Combiner.SwappedNegativeProduct:
-                for (let z = 0; z < 2; z++) {
+            case Combiner.Triangular:
+                for (let i = 0; i < x.size(); i++) {
                     for (let j = 0; j < y.size(); j++) {
-                        for (let i = 0; i < x.size(); i++) {
-                            if (z == 0) o.add(0);
-                            else if (operationFn) {
-                                o.set((((j * x.size()) - (x.size() - 1) + i) + o.size()) % o.size(), operationFn(x.get(i)!, y.get(j)!));
-                            }
+                        if (j <= i && operationFn) {
+                            o.concat(operationFn(x.get(i)!, y.get(j)!));
+                        }
+                    }
+                }
+                break;
+            case Combiner.SwappedTriangular:
+                for (let j = 0; j < y.size(); j++) {
+                    for (let i = 0; i < x.size(); i++) {
+
+                        if (i <= j && operationFn) {
+                            o.concat(operationFn(x.get(i)!, y.get(j)!));
                         }
                     }
                 }
@@ -543,35 +533,11 @@ export class Sequence {
                     for (let j = 0; j < y.size(); j++) {
                         if (operationFn) {
                             let v = operationFn(x.get(i)!, y.get(j)!);
-                            o.set((i + j) % o.size(),
-                                o.get((i + j) % o.size())! + v);
+                            for(let k=0;k<v.length;k++) {
+                                o.set((i + j + k) % o.size(),
+                                    o.get((i + j + k) % o.size())! + v[k]);
+                            }
                         }
-                    }
-                }
-                break;
-            case Combiner.Triangular:
-                for (let i = 0; i < x.size(); i++) {
-                    for (let j = 0; j < y.size(); j++) {
-                        if (j <= i && operationFn) {
-                            o.add(operationFn(x.get(i)!, y.get(j)!));
-                        }
-                    }
-                }
-                break;
-            case Combiner.SwappedTriangular:
-                for (let j = 0; j < y.size(); j++) {
-                    for (let i = 0; i < x.size(); i++) {
-
-                        if (i <= j && operationFn) {
-                            o.add(operationFn(x.get(i)!, y.get(j)!));
-                        }
-                    }
-                }
-                break;
-            case Combiner.Reduce:
-                for (let i = 0; i < x.size(); i++) {
-                    if (operationFn) {
-                        o.add(y.toArray().reduce((a, b) => operationFn(a, b), x.get(i)!));
                     }
                 }
                 break;
@@ -603,29 +569,9 @@ export class Sequence {
 
                 if (operationFn) {
                     const combined = result.map(row =>
-                        row.map((value, index) => operationFn(value, y.get(index % y.size())!)).reduce((a, b) => a + b, 0)
+                        row.map((value, index) => operationFn(value, y.get(index % y.size())!)).reduce((a, b) => a + b.reduce((u,v) => u+v,0), 0)
                     );
                     for (let z of combined) o.add(z);
-                }
-                break;
-            case Combiner.Bits:
-                for (let i = 0; i < x.size(); i++) {
-                    let b = Numbers.toBinary(x.get(i)!, y.get(i % y.size())!);
-                    for (let j = 0; j < b.length; j++) {
-                        if (operationFn) {
-                            o.add(operationFn(b[j], Math.pow(2, y.get(i % y.size())! < 0 ? j : b.length - 1 - j)));
-                        }
-                    }
-                }
-                break;
-            case Combiner.Trits:
-                for (let i = 0; i < x.size(); i++) {
-                    let b = Numbers.toBalancedTernary(x.get(i)!, y.get(i % y.size())!);
-                    for (let j = 0; j < b.length; j++) {
-                        if (operationFn) {
-                            o.add(operationFn(b[j], Math.pow(3, y.get(i)! < 0 ? j : b.length - 1 - j)));
-                        }
-                    }
                 }
                 break;
         }

@@ -103,14 +103,6 @@ describe('Sequence Class', () => {
         expect(result.toArray()).toEqual([4, 5, 5, 6]); // Expected result based on addition of elements
     });
 
-    test('combine() with Combiner.NegativeProduct should return the correct negative product result', () => {
-        const x = new Sequence(1, 2);
-        const y = new Sequence(3, 4);
-        
-        const result = Sequence.combine(Combiner.NegativeProduct, Operation.Add, x, y);
-        expect(result.toArray()).toEqual([5, 5, 6, 4]); // Expected result according to the negative product logic
-    });
-
     test('combine() with Combiner.Triangular should return the correct triangular result', () => {
         const x = new Sequence(1, 2, 3);
         const y = new Sequence(4, 5);
@@ -147,16 +139,8 @@ describe('Sequence Class', () => {
         const x = new Sequence(0, 4);
         const y = new Sequence(4, -4);
         
-        const result = Sequence.combine(Combiner.IterateBetween, Operation.X, x, y);
+        const result = Sequence.combine(Combiner.Recycle, Operation.IterateBetween, x, y);
         expect(result.toArray()).toEqual([0,1,2,3,4,3,2,1,0,-1,-2,-3]);
-    });
-
-    test('combine() with Combiner.MixedRadix should return the correct result based on mixed radix', () => {
-        const x = new Sequence(2, 3);
-        const y = new Sequence(1, 2);
-        
-        const result = Sequence.combine(Combiner.MixedRadix, Operation.Multiply, x, y);
-        expect(result.toArray()).toEqual([0, 1, 2, 3, 4, 5]);
     });
     test('combine() with Combiner.Convolution should return the correct convolution result', () => {
         const x = new Sequence(1, 2, 3);
@@ -165,47 +149,26 @@ describe('Sequence Class', () => {
         const result = Sequence.combine(Combiner.Convolution, Operation.Add, x, y);
         expect(result.toArray()).toEqual([13, 12, 14]); // Expected result based on convolution
     });
-    test('combine() with Combiner.Bits 1', () => {
+    test('combine() with Combiner.MixedRadix should return the correct result based on mixed radix', () => {
+        const x = new Sequence(2, 3);
+        const y = new Sequence(1, 2);
+        
+        const result = Sequence.combine(Combiner.MixedRadix, Operation.Multiply, x, y);
+        expect(result.toArray()).toEqual([0, 1, 2, 3, 4, 5]);
+    });
+    test('combine() with Combiner.Bits', () => {
         const x = new Sequence(15, 15, 3);
         const y = new Sequence(4, 5, 3);
         
-        const result = Sequence.combine(Combiner.Bits, Operation.X, x, y);
+        const result = Sequence.combine(Combiner.Recycle, Operation.Bits, x, y);
         expect(result.toArray()).toEqual([1,1,1,1,0,1,1,1,1,0,1,1]);
     });
-    test('combine() with Combiner.Bits 2', () => {
-        const x = new Sequence(15, 15, 3);
-        const y = new Sequence(4, 5, -3);
-        
-        const result = Sequence.combine(Combiner.Bits, Operation.Y, x, y);
-        expect(result.toArray()).toEqual([8,4,2,1,16,8,4,2,1,1,2,4]);
-    });
-    test('combine() with Combiner.Bits 3', () => {
-        const x = new Sequence(15, 15, 3);
-        const y = new Sequence(4);
-        
-        const result = Sequence.combine(Combiner.Bits, Operation.Y, x, y);
-        expect(result.toArray()).toEqual([8,4,2,1,8,4,2,1,8,4,2,1]);
-    });
-    test('combine() with Combiner.Trits 1', () => {
+    test('combine() with Operation.Trits', () => {
         const x = new Sequence(5, 5, 5);
         const y = new Sequence(3, 3, -3);
         
-        const result = Sequence.combine(Combiner.Trits, Operation.X, x, y);
+        const result = Sequence.combine(Combiner.Recycle, Operation.Trits, x, y);
         expect(result.toArray()).toEqual([1,-1,-1,1,-1,-1,-1,-1,1]);
-    });
-    test('combine() with Combiner.Trits 2', () => {
-        const x = new Sequence(5, 5, 1);
-        const y = new Sequence(3, 3, -3);
-        
-        const result = Sequence.combine(Combiner.Trits, Operation.Y, x, y);
-        expect(result.toArray()).toEqual([9,3,1,9,3,1,1,3,9]);
-    });
-    test('combine() with Combiner.Trits 3', () => {
-        const x = new Sequence(5, 5, 1);
-        const y = new Sequence(3);
-        
-        const result = Sequence.combine(Combiner.Trits, Operation.Y, x, y);
-        expect(result.toArray()).toEqual([9,3,1,9,3,1,9,3,1]);
     });
     test('combine() with bitwise AND', () => {
         const x = new Sequence(6, -5, 0, 7);
