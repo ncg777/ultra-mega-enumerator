@@ -60,7 +60,6 @@ export enum Combiner {
     SwappedTriangular = 'SwappedTriangular',
     Recycle = 'Recycle',
     Apply = 'Apply',
-    Reduce = 'Reduce',
     MixedRadix = 'Mixed Radix',
 }
 function maxBinaryDigits(a: number, b: number): number {
