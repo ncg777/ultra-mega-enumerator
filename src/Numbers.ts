@@ -300,34 +300,46 @@ export class Numbers {
 
     static getPermutation(n: number): number[] {
         if (n === 0) return [0];
-    
-        let adjustedN = Math.abs(n);
-        let k = 1, fact = 1;
-    
-        while (fact <= adjustedN) {
+
+        const absN = Math.abs(n);
+
+        // Find minimal k such that k! > absN
+        let k = 1;
+        let fact = 1;
+        while (fact <= absN) {
             k++;
             fact *= k;
         }
-        k--;
-    
-        let lehmerCode: number[] = [];
-        fact /= (k + 1);
-    
+        k--; // overshot
+
+        const totalPerms = fact / (k + 1) * (k + 1); // (k+1)!
+        if (absN >= totalPerms) {
+            throw new Error(`n is too large to generate a permutation of size ${k + 1}`);
+        }
+
+        // Build Lehmer code
+        const lehmerCode: number[] = [];
+        let remaining = absN;
+        fact /= (k + 1); // Start with k! for k+1 elements
         for (let i = k; i >= 1; i--) {
-            lehmerCode.push(Math.floor(adjustedN / fact));
-            adjustedN %= fact;
+            lehmerCode.push(Math.floor(remaining / fact));
+            remaining %= fact;
             if (i > 1) fact /= i;
         }
-    
-        let elements: number[] = Array.from({ length: k + 1 }, (_, i) => i);
-        let permutation: number[] = [];
-    
-        for (let index of lehmerCode) {
-            permutation.push(elements.splice(index, 1)[0]);
+
+        // Build permutation from Lehmer code
+        const elements: number[] = [];
+        for (let i = 0; i <= k; i++) elements.push(i);
+
+        const permutation: number[] = [];
+        for (const code of lehmerCode) {
+            permutation.push(elements.splice(code, 1)[0]);
         }
-    
+        permutation.push(elements[0]); // add last remaining element
+
+        // For negative n, reverse the permutation
         if (n < 0) permutation.reverse();
-    
+
         return permutation;
     }
     
