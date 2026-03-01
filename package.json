@@ -44,6 +44,10 @@
       "types": "./dist/index.d.ts"
     }
   },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
   "scripts": {
     "build:js": "webpack --config webpack.config.ts",
     "build:types": "tsc",
