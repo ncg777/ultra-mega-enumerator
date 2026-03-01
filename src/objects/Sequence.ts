@@ -43,6 +43,8 @@ export enum Operation {
     IterateBetween = 'IterateBetween',
     Bits = 'Bits',
     Trits = 'Trits',
+    TritSumSign = 'TritSumSign',
+    TritProductSign = 'TritProductSign',
     
 }
 
@@ -64,6 +66,17 @@ function maxBinaryDigits(a: number, b: number): number {
     // Special case: 0 requires 1 digit
     const digitsA = absA === 0 ? 1 : Math.floor(Math.log2(absA)) + 1;
     const digitsB = absB === 0 ? 1 : Math.floor(Math.log2(absB)) + 1;
+    return Math.max(digitsA, digitsB);
+}
+
+function maxTernaryDigits(a: number, b: number): number {
+    const absA = Math.abs(a);
+    const absB = Math.abs(b);
+    // For balanced ternary, max value in n digits is (3^n - 1) / 2
+    // So to represent value v, we need n such that v <= (3^n - 1) / 2
+    // Which means 3^n >= 2*v + 1, so n >= log_3(2*v + 1)
+    const digitsA = absA === 0 ? 1 : Math.ceil(Math.log(2 * absA + 1) / Math.log(3));
+    const digitsB = absB === 0 ? 1 : Math.ceil(Math.log(2 * absB + 1) / Math.log(3));
     return Math.max(digitsA, digitsB);
 }
 
@@ -99,6 +112,22 @@ function applyBitwise(
     const result = sign * Numbers.fromBinary(resultBits);
 
     return result == -0 ? 0 : result;
+}
+
+function sign(n: number): number {
+    return n > 0 ? 1 : (n < 0 ? -1 : 0);
+}
+
+function applyTritwise(
+    x: number,
+    y: number,
+    op: (a: number, b: number) => number
+): number {
+    const ndigits = maxTernaryDigits(x, y);
+    const tx = Numbers.toBalancedTernary(x, ndigits);
+    const ty = Numbers.toBalancedTernary(y, ndigits);
+    const result = tx.map((t, i) => sign(op(t, ty[i])));
+    return Numbers.fromBalancedTernary(result);
 }
 
 /**
@@ -212,6 +241,8 @@ const ops = new Map<Operation, (x: number, y: number) => number[]>([
     }],
     [Operation.Bits, (x,y) => Numbers.toBinary(x, y)],
     [Operation.Trits, (x,y) => Numbers.toBalancedTernary(x, y)],
+    [Operation.TritSumSign, (x, y) => [applyTritwise(x, y, (a, b) => a + b)]],
+    [Operation.TritProductSign, (x, y) => [applyTritwise(x, y, (a, b) => a * b)]],
 ]);
 
 export class Sequence {
