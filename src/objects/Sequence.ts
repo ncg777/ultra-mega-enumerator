@@ -142,8 +142,6 @@ function applyTritwise(
     return Numbers.fromBalancedTernary(result);
 }
 
-const tritIndex = new Map<number, number>([[-1, 0], [0, 1], [1, 2]]);
-
 const binaryTritOps: Record<string, number[][]> = {
     AND:   [[-1,-1,-1],[-1, 0, 0],[-1, 0, 1]],
     NAND:  [[ 1, 1, 1],[ 1, 0, 0],[ 1, 0,-1]],
@@ -167,7 +165,7 @@ function applyTritwiseBinary(
     const ndigits = maxTernaryDigits(x, y);
     const tx = Numbers.toBalancedTernary(x, ndigits);
     const ty = Numbers.toBalancedTernary(y, ndigits);
-    const result = tx.map((t, i) => tritOp[tritIndex.get(t)!][tritIndex.get(ty[i])!]);
+    const result = tx.map((t, i) => tritOp[Numbers.tritIndex.get(t)!][Numbers.tritIndex.get(ty[i])!]);
     return Numbers.fromBalancedTernary(result);
 }
 

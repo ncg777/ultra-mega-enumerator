@@ -436,7 +436,7 @@ export class Numbers {
         return o;
     }
 
-    private static readonly tritIndex = new Map<number, number>([[-1, 0], [0, 1], [1, 2]]);
+    static readonly tritIndex = new Map<number, number>([[-1, 0], [0, 1], [1, 2]]);
 
     private static readonly unaryTritOps: Record<string, number[]> = {
         BUF:  [-1, 0, 1],
