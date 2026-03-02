@@ -319,4 +319,110 @@ describe('Sequence Class', () => {
         const result = Sequence.combine(Combiner.Recycle, Operation.TritProductSign, x, y);
         expect(result.toArray()).toEqual([1, -1]);
     });
+
+    test('combine() with Operation.TritAnd', () => {
+        const x = new Sequence(1, 1, 0, -1);
+        const y = new Sequence(1, -1, 1, -1);
+        const result = Sequence.combine(Combiner.Recycle, Operation.TritAnd, x, y);
+        // AND table: (1,1)=1, (1,-1)=-1, (0,1)=0, (-1,-1)=-1
+        expect(result.toArray()).toEqual([1, -1, 0, -1]);
+    });
+
+    test('combine() with Operation.TritNand', () => {
+        const x = new Sequence(1, 1, 0, -1);
+        const y = new Sequence(1, -1, 1, -1);
+        const result = Sequence.combine(Combiner.Recycle, Operation.TritNand, x, y);
+        // NAND table: (1,1)=-1, (1,-1)=1, (0,1)=0, (-1,-1)=1
+        expect(result.toArray()).toEqual([-1, 1, 0, 1]);
+    });
+
+    test('combine() with Operation.TritOr', () => {
+        const x = new Sequence(1, 1, 0, -1);
+        const y = new Sequence(1, -1, 1, -1);
+        const result = Sequence.combine(Combiner.Recycle, Operation.TritOr, x, y);
+        // OR table: (1,1)=1, (1,-1)=1, (0,1)=1, (-1,-1)=-1
+        expect(result.toArray()).toEqual([1, 1, 1, -1]);
+    });
+
+    test('combine() with Operation.TritNor', () => {
+        const x = new Sequence(1, 1, 0, -1);
+        const y = new Sequence(1, -1, 1, -1);
+        const result = Sequence.combine(Combiner.Recycle, Operation.TritNor, x, y);
+        // NOR table: (1,1)=-1, (1,-1)=-1, (0,1)=-1, (-1,-1)=1
+        expect(result.toArray()).toEqual([-1, -1, -1, 1]);
+    });
+
+    test('combine() with Operation.TritCons', () => {
+        const x = new Sequence(1, 0, -1);
+        const y = new Sequence(1, 0, -1);
+        const result = Sequence.combine(Combiner.Recycle, Operation.TritCons, x, y);
+        // CONS table: (1,1)=1, (0,0)=0, (-1,-1)=-1
+        expect(result.toArray()).toEqual([1, 0, -1]);
+    });
+
+    test('combine() with Operation.TritNcons', () => {
+        const x = new Sequence(1, 0, -1);
+        const y = new Sequence(1, 0, -1);
+        const result = Sequence.combine(Combiner.Recycle, Operation.TritNcons, x, y);
+        // NCONS table: (1,1)=-1, (0,0)=0, (-1,-1)=1
+        expect(result.toArray()).toEqual([-1, 0, 1]);
+    });
+
+    test('combine() with Operation.TritAny', () => {
+        const x = new Sequence(1, 0, -1);
+        const y = new Sequence(0, 0, 0);
+        const result = Sequence.combine(Combiner.Recycle, Operation.TritAny, x, y);
+        // ANY table: (1,0)=1, (0,0)=0, (-1,0)=-1
+        expect(result.toArray()).toEqual([1, 0, -1]);
+    });
+
+    test('combine() with Operation.TritNany', () => {
+        const x = new Sequence(1, 0, -1);
+        const y = new Sequence(0, 0, 0);
+        const result = Sequence.combine(Combiner.Recycle, Operation.TritNany, x, y);
+        // NANY table: (1,0)=-1, (0,0)=0, (-1,0)=1
+        expect(result.toArray()).toEqual([-1, 0, 1]);
+    });
+
+    test('combine() with Operation.TritMul', () => {
+        const x = new Sequence(1, 1, -1, -1, 0);
+        const y = new Sequence(1, -1, 1, -1, 1);
+        const result = Sequence.combine(Combiner.Recycle, Operation.TritMul, x, y);
+        // MUL: (1,1)=1, (1,-1)=-1, (-1,1)=-1, (-1,-1)=1, (0,1)=0
+        expect(result.toArray()).toEqual([1, -1, -1, 1, 0]);
+    });
+
+    test('combine() with Operation.TritNmul', () => {
+        const x = new Sequence(1, 1, -1, -1, 0);
+        const y = new Sequence(1, -1, 1, -1, 1);
+        const result = Sequence.combine(Combiner.Recycle, Operation.TritNmul, x, y);
+        // NMUL: (1,1)=-1, (1,-1)=1, (-1,1)=1, (-1,-1)=-1, (0,1)=0
+        expect(result.toArray()).toEqual([-1, 1, 1, -1, 0]);
+    });
+
+    test('combine() with Operation.TritSum', () => {
+        const x = new Sequence(1, 1, -1, 0);
+        const y = new Sequence(1, -1, -1, 0);
+        const result = Sequence.combine(Combiner.Recycle, Operation.TritSum, x, y);
+        // SUM: (1,1)=-1, (1,-1)=0, (-1,-1)=1, (0,0)=0
+        expect(result.toArray()).toEqual([-1, 0, 1, 0]);
+    });
+
+    test('combine() with Operation.TritNsum', () => {
+        const x = new Sequence(1, 1, -1, 0);
+        const y = new Sequence(1, -1, -1, 0);
+        const result = Sequence.combine(Combiner.Recycle, Operation.TritNsum, x, y);
+        // NSUM: (1,1)=1, (1,-1)=0, (-1,-1)=-1, (0,0)=0
+        expect(result.toArray()).toEqual([1, 0, -1, 0]);
+    });
+
+    test('combine() with Operation.TritAnd on multi-trit numbers', () => {
+        // 5 = [1,-1,-1] in balanced ternary, 4 = [0,1,1]
+        // AND tritwise: [AND(1,0), AND(-1,1), AND(-1,1)] = [0, -1, -1]
+        // fromBalancedTernary([0,-1,-1]) = 0-3-1 = -4
+        const x = new Sequence(5);
+        const y = new Sequence(4);
+        const result = Sequence.combine(Combiner.Recycle, Operation.TritAnd, x, y);
+        expect(result.toArray()).toEqual([-4]);
+    });
 });

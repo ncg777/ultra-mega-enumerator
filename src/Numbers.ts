@@ -435,4 +435,46 @@ export class Numbers {
         }
         return o;
     }
+
+    static readonly tritIndex = new Map<number, number>([[-1, 0], [0, 1], [1, 2]]);
+
+    private static readonly unaryTritOps: Record<string, number[]> = {
+        BUF:  [-1, 0, 1],
+        NOT:  [ 1, 0,-1],
+        PNOT: [ 1, 1,-1],
+        NNOT: [ 1,-1,-1],
+        ABS:  [ 1, 0, 1],
+        CLU:  [ 0, 0, 1],
+        CLD:  [-1, 0, 0],
+        INC:  [ 0, 1, 1],
+        DEC:  [-1,-1, 0],
+        RTU:  [ 0, 1,-1],
+        RTD:  [ 1,-1, 0],
+        ISP:  [-1,-1, 1],
+        ISZ:  [-1, 1,-1],
+        ISN:  [ 1,-1,-1],
+    };
+
+    static applyUnaryTritwise(n: number, tritOp: number[]): number {
+        const absN = Math.abs(n);
+        const ndigits = absN === 0 ? 1 : Math.ceil(Math.log(2 * absN + 1) / Math.log(3));
+        const trits = Numbers.toBalancedTernary(n, ndigits);
+        const result = trits.map(t => tritOp[Numbers.tritIndex.get(t)!]);
+        return Numbers.fromBalancedTernary(result);
+    }
+
+    static tritBuf(n: number): number { return Numbers.applyUnaryTritwise(n, Numbers.unaryTritOps.BUF); }
+    static tritNot(n: number): number { return Numbers.applyUnaryTritwise(n, Numbers.unaryTritOps.NOT); }
+    static tritPnot(n: number): number { return Numbers.applyUnaryTritwise(n, Numbers.unaryTritOps.PNOT); }
+    static tritNnot(n: number): number { return Numbers.applyUnaryTritwise(n, Numbers.unaryTritOps.NNOT); }
+    static tritAbs(n: number): number { return Numbers.applyUnaryTritwise(n, Numbers.unaryTritOps.ABS); }
+    static tritClu(n: number): number { return Numbers.applyUnaryTritwise(n, Numbers.unaryTritOps.CLU); }
+    static tritCld(n: number): number { return Numbers.applyUnaryTritwise(n, Numbers.unaryTritOps.CLD); }
+    static tritInc(n: number): number { return Numbers.applyUnaryTritwise(n, Numbers.unaryTritOps.INC); }
+    static tritDec(n: number): number { return Numbers.applyUnaryTritwise(n, Numbers.unaryTritOps.DEC); }
+    static tritRtu(n: number): number { return Numbers.applyUnaryTritwise(n, Numbers.unaryTritOps.RTU); }
+    static tritRtd(n: number): number { return Numbers.applyUnaryTritwise(n, Numbers.unaryTritOps.RTD); }
+    static tritIsp(n: number): number { return Numbers.applyUnaryTritwise(n, Numbers.unaryTritOps.ISP); }
+    static tritIsz(n: number): number { return Numbers.applyUnaryTritwise(n, Numbers.unaryTritOps.ISZ); }
+    static tritIsn(n: number): number { return Numbers.applyUnaryTritwise(n, Numbers.unaryTritOps.ISN); }
 }

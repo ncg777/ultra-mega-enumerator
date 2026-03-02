@@ -45,6 +45,18 @@ export enum Operation {
     Trits = 'Trits',
     TritSumSign = 'TritSumSign',
     TritProductSign = 'TritProductSign',
+    TritAnd = 'TritAnd',
+    TritNand = 'TritNand',
+    TritOr = 'TritOr',
+    TritNor = 'TritNor',
+    TritCons = 'TritCons',
+    TritNcons = 'TritNcons',
+    TritAny = 'TritAny',
+    TritNany = 'TritNany',
+    TritMul = 'TritMul',
+    TritNmul = 'TritNmul',
+    TritSum = 'TritSum',
+    TritNsum = 'TritNsum',
     
 }
 
@@ -127,6 +139,33 @@ function applyTritwise(
     const tx = Numbers.toBalancedTernary(x, ndigits);
     const ty = Numbers.toBalancedTernary(y, ndigits);
     const result = tx.map((t, i) => sign(op(t, ty[i])));
+    return Numbers.fromBalancedTernary(result);
+}
+
+const binaryTritOps: Record<string, number[][]> = {
+    AND:   [[-1,-1,-1],[-1, 0, 0],[-1, 0, 1]],
+    NAND:  [[ 1, 1, 1],[ 1, 0, 0],[ 1, 0,-1]],
+    OR:    [[-1, 0, 1],[ 0, 0, 1],[ 1, 1, 1]],
+    NOR:   [[ 1, 0,-1],[ 0, 0,-1],[-1,-1,-1]],
+    CONS:  [[-1, 0, 0],[ 0, 0, 0],[ 0, 0, 1]],
+    NCONS: [[ 1, 0, 0],[ 0, 0, 0],[ 0, 0,-1]],
+    ANY:   [[-1,-1, 0],[-1, 0, 1],[ 0, 1, 1]],
+    NANY:  [[ 1, 1, 0],[ 1, 0,-1],[ 0,-1,-1]],
+    MUL:   [[ 1, 0,-1],[ 0, 0, 0],[-1, 0, 1]],
+    NMUL:  [[-1, 0, 1],[ 0, 0, 0],[ 1, 0,-1]],
+    SUM:   [[ 1,-1, 0],[-1, 0, 1],[ 0, 1,-1]],
+    NSUM:  [[-1, 1, 0],[ 1, 0,-1],[ 0,-1, 1]],
+};
+
+function applyTritwiseBinary(
+    x: number,
+    y: number,
+    tritOp: number[][]
+): number {
+    const ndigits = maxTernaryDigits(x, y);
+    const tx = Numbers.toBalancedTernary(x, ndigits);
+    const ty = Numbers.toBalancedTernary(y, ndigits);
+    const result = tx.map((t, i) => tritOp[Numbers.tritIndex.get(t)!][Numbers.tritIndex.get(ty[i])!]);
     return Numbers.fromBalancedTernary(result);
 }
 
@@ -243,6 +282,18 @@ const ops = new Map<Operation, (x: number, y: number) => number[]>([
     [Operation.Trits, (x,y) => Numbers.toBalancedTernary(x, y)],
     [Operation.TritSumSign, (x, y) => [applyTritwise(x, y, (a, b) => a + b)]],
     [Operation.TritProductSign, (x, y) => [applyTritwise(x, y, (a, b) => a * b)]],
+    [Operation.TritAnd, (x, y) => [applyTritwiseBinary(x, y, binaryTritOps.AND)]],
+    [Operation.TritNand, (x, y) => [applyTritwiseBinary(x, y, binaryTritOps.NAND)]],
+    [Operation.TritOr, (x, y) => [applyTritwiseBinary(x, y, binaryTritOps.OR)]],
+    [Operation.TritNor, (x, y) => [applyTritwiseBinary(x, y, binaryTritOps.NOR)]],
+    [Operation.TritCons, (x, y) => [applyTritwiseBinary(x, y, binaryTritOps.CONS)]],
+    [Operation.TritNcons, (x, y) => [applyTritwiseBinary(x, y, binaryTritOps.NCONS)]],
+    [Operation.TritAny, (x, y) => [applyTritwiseBinary(x, y, binaryTritOps.ANY)]],
+    [Operation.TritNany, (x, y) => [applyTritwiseBinary(x, y, binaryTritOps.NANY)]],
+    [Operation.TritMul, (x, y) => [applyTritwiseBinary(x, y, binaryTritOps.MUL)]],
+    [Operation.TritNmul, (x, y) => [applyTritwiseBinary(x, y, binaryTritOps.NMUL)]],
+    [Operation.TritSum, (x, y) => [applyTritwiseBinary(x, y, binaryTritOps.SUM)]],
+    [Operation.TritNsum, (x, y) => [applyTritwiseBinary(x, y, binaryTritOps.NSUM)]],
 ]);
 
 export class Sequence {
