@@ -93,4 +93,101 @@ describe('Numbers Class Tests', () => {
       });
     });
   });
+  describe('Unary Tritwise Operations', () => {
+    test('tritBuf identity', () => {
+      expect(Numbers.tritBuf(-1)).toBe(-1);
+      expect(Numbers.tritBuf(0)).toBe(0);
+      expect(Numbers.tritBuf(1)).toBe(1);
+    });
+
+    test('tritNot negation', () => {
+      expect(Numbers.tritNot(-1)).toBe(1);
+      expect(Numbers.tritNot(0)).toBe(0);
+      expect(Numbers.tritNot(1)).toBe(-1);
+    });
+
+    test('tritNot on multi-trit number', () => {
+      // 5 in balanced ternary (3 digits): [1, -1, -1]
+      // NOT applied: [-1, 1, 1] = -9+3+1 = -5
+      expect(Numbers.tritNot(5)).toBe(-5);
+    });
+
+    test('tritAbs on single trits', () => {
+      expect(Numbers.tritAbs(-1)).toBe(1);
+      expect(Numbers.tritAbs(0)).toBe(0);
+      expect(Numbers.tritAbs(1)).toBe(1);
+    });
+
+    test('tritAbs on multi-trit number', () => {
+      // -5 in balanced ternary: [-1, 1, 1]
+      // ABS: [1, 1, 1] = 9+3+1 = 13
+      expect(Numbers.tritAbs(-5)).toBe(13);
+    });
+
+    test('tritInc on single trits', () => {
+      expect(Numbers.tritInc(-1)).toBe(0);
+      expect(Numbers.tritInc(0)).toBe(1);
+      expect(Numbers.tritInc(1)).toBe(1);
+    });
+
+    test('tritDec on single trits', () => {
+      expect(Numbers.tritDec(-1)).toBe(-1);
+      expect(Numbers.tritDec(0)).toBe(-1);
+      expect(Numbers.tritDec(1)).toBe(0);
+    });
+
+    test('tritIsp identifies positive trits', () => {
+      expect(Numbers.tritIsp(-1)).toBe(-1);
+      expect(Numbers.tritIsp(0)).toBe(-1);
+      expect(Numbers.tritIsp(1)).toBe(1);
+    });
+
+    test('tritIsz identifies zero trits', () => {
+      expect(Numbers.tritIsz(-1)).toBe(-1);
+      expect(Numbers.tritIsz(0)).toBe(1);
+      expect(Numbers.tritIsz(1)).toBe(-1);
+    });
+
+    test('tritIsn identifies negative trits', () => {
+      expect(Numbers.tritIsn(-1)).toBe(1);
+      expect(Numbers.tritIsn(0)).toBe(-1);
+      expect(Numbers.tritIsn(1)).toBe(-1);
+    });
+
+    test('tritClu clamp up', () => {
+      expect(Numbers.tritClu(-1)).toBe(0);
+      expect(Numbers.tritClu(0)).toBe(0);
+      expect(Numbers.tritClu(1)).toBe(1);
+    });
+
+    test('tritCld clamp down', () => {
+      expect(Numbers.tritCld(-1)).toBe(-1);
+      expect(Numbers.tritCld(0)).toBe(0);
+      expect(Numbers.tritCld(1)).toBe(0);
+    });
+
+    test('tritRtu rotate up', () => {
+      expect(Numbers.tritRtu(-1)).toBe(0);
+      expect(Numbers.tritRtu(0)).toBe(1);
+      expect(Numbers.tritRtu(1)).toBe(-1);
+    });
+
+    test('tritRtd rotate down', () => {
+      expect(Numbers.tritRtd(-1)).toBe(1);
+      expect(Numbers.tritRtd(0)).toBe(-1);
+      expect(Numbers.tritRtd(1)).toBe(0);
+    });
+
+    test('tritPnot positive not', () => {
+      expect(Numbers.tritPnot(-1)).toBe(1);
+      expect(Numbers.tritPnot(0)).toBe(1);
+      expect(Numbers.tritPnot(1)).toBe(-1);
+    });
+
+    test('tritNnot negative not', () => {
+      expect(Numbers.tritNnot(-1)).toBe(1);
+      expect(Numbers.tritNnot(0)).toBe(-1);
+      expect(Numbers.tritNnot(1)).toBe(-1);
+    });
+  });
 });
