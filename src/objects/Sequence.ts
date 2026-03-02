@@ -43,8 +43,6 @@ export enum Operation {
     IterateBetween = 'IterateBetween',
     Bits = 'Bits',
     Trits = 'Trits',
-    TritSumSign = 'TritSumSign',
-    TritProductSign = 'TritProductSign',
     TritAnd = 'TritAnd',
     TritNand = 'TritNand',
     TritOr = 'TritOr',
@@ -130,17 +128,7 @@ function sign(n: number): number {
     return n > 0 ? 1 : (n < 0 ? -1 : 0);
 }
 
-function applyTritwise(
-    x: number,
-    y: number,
-    op: (a: number, b: number) => number
-): number {
-    const ndigits = maxTernaryDigits(x, y);
-    const tx = Numbers.toBalancedTernary(x, ndigits);
-    const ty = Numbers.toBalancedTernary(y, ndigits);
-    const result = tx.map((t, i) => sign(op(t, ty[i])));
-    return Numbers.fromBalancedTernary(result);
-}
+
 
 const binaryTritOps: Record<string, number[][]> = {
     AND:   [[-1,-1,-1],[-1, 0, 0],[-1, 0, 1]],
@@ -280,8 +268,6 @@ const ops = new Map<Operation, (x: number, y: number) => number[]>([
     }],
     [Operation.Bits, (x,y) => Numbers.toBinary(x, y)],
     [Operation.Trits, (x,y) => Numbers.toBalancedTernary(x, y)],
-    [Operation.TritSumSign, (x, y) => [applyTritwise(x, y, (a, b) => a + b)]],
-    [Operation.TritProductSign, (x, y) => [applyTritwise(x, y, (a, b) => a * b)]],
     [Operation.TritAnd, (x, y) => [applyTritwiseBinary(x, y, binaryTritOps.AND)]],
     [Operation.TritNand, (x, y) => [applyTritwiseBinary(x, y, binaryTritOps.NAND)]],
     [Operation.TritOr, (x, y) => [applyTritwiseBinary(x, y, binaryTritOps.OR)]],

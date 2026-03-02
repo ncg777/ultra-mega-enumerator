@@ -264,62 +264,6 @@ describe('Sequence Class', () => {
         expect(result.toArray()).toEqual([0,0,0,1,-1,0,4,-4,0,5,-5,0]);
     });
 
-    test('combine() with Operation.TritSumSign - positive numbers', () => {
-        const x = new Sequence(1, 1, 1);
-        const y = new Sequence(1, 1, 1);
-        
-        const result = Sequence.combine(Combiner.Recycle, Operation.TritSumSign, x, y);
-        expect(result.toArray()).toEqual([1, 1, 1]);
-    });
-
-    test('combine() with Operation.TritSumSign - mixed signs', () => {
-        const x = new Sequence(5, 5);
-        const y = new Sequence(1, -1);
-        
-        const result = Sequence.combine(Combiner.Recycle, Operation.TritSumSign, x, y);
-        expect(result.toArray()).toEqual([6, 5]);
-    });
-
-    test('combine() with Operation.TritSumSign - canceling out', () => {
-        const x = new Sequence(1, 1);
-        const y = new Sequence(-1, -1);
-        
-        const result = Sequence.combine(Combiner.Recycle, Operation.TritSumSign, x, y);
-        expect(result.toArray()).toEqual([0, 0]);
-    });
-
-    test('combine() with Operation.TritProductSign - both positive', () => {
-        const x = new Sequence(1, 1);
-        const y = new Sequence(1, 1);
-        
-        const result = Sequence.combine(Combiner.Recycle, Operation.TritProductSign, x, y);
-        expect(result.toArray()).toEqual([1, 1]);
-    });
-
-    test('combine() with Operation.TritProductSign - mixed signs', () => {
-        const x = new Sequence(5, 5);
-        const y = new Sequence(2, -2);
-        
-        const result = Sequence.combine(Combiner.Recycle, Operation.TritProductSign, x, y);
-        expect(result.toArray()).toEqual([-2, 2]);
-    });
-
-    test('combine() with Operation.TritProductSign - with zero product', () => {
-        const x = new Sequence(1, 1);
-        const y = new Sequence(0, 0);
-        
-        const result = Sequence.combine(Combiner.Recycle, Operation.TritProductSign, x, y);
-        expect(result.toArray()).toEqual([0, 0]);
-    });
-
-    test('combine() with Operation.TritProductSign - opposite signs in ternary', () => {
-        const x = new Sequence(1, 1);
-        const y = new Sequence(1, -1);
-        
-        const result = Sequence.combine(Combiner.Recycle, Operation.TritProductSign, x, y);
-        expect(result.toArray()).toEqual([1, -1]);
-    });
-
     test('combine() with Operation.TritAnd', () => {
         const x = new Sequence(1, 1, 0, -1);
         const y = new Sequence(1, -1, 1, -1);
