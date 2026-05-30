@@ -264,6 +264,15 @@ describe('Sequence Class', () => {
         expect(result.toArray()).toEqual([0,0,0,1,-1,0,4,-4,0,5,-5,0]);
     });
 
+    test('combine() with Bounce keeps values in range for negative inputs', () => {
+        const x = new Sequence(-1, -6, 7, 12, 0);
+        const y = new Sequence(5, 5, -5, -5, -5);
+
+        const result = Sequence.combine(Combiner.Recycle, Operation.Bounce, x, y);
+
+        expect(result.toArray()).toEqual([1, 4, 3, 2, 0]);
+    });
+
     test('combine() with Operation.TritAnd', () => {
         const x = new Sequence(1, 1, 0, -1);
         const y = new Sequence(1, -1, 1, -1);

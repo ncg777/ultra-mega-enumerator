@@ -175,6 +175,16 @@ function shift(n: number, positions: number): number {
     }
 }
 
+function bounce(n: number, limit: number): number {
+    if (limit === 0) return 0;
+
+    const distance = Math.abs(limit);
+    const period = distance * 2;
+    const normalized = ((n % period) + period) % period;
+
+    return normalized <= distance ? normalized : period - normalized;
+}
+
 function projectBits(a:number, b:number) {
     const absA:number = Math.abs(a);
     const absB:number = Math.abs(b);
@@ -221,11 +231,7 @@ const ops = new Map<Operation, (x: number, y: number) => number[]>([
     [Operation.Min, (x, y) => [Math.min(x, y)]],
     [Operation.Max, (x, y) => [Math.max(x, y)]],
     [Operation.Modulo, (x, y) => [y !== 0 ? x % y : 0]],
-    [Operation.Bounce, (x, y) => {
-        if (y === 0) return [0];
-        const mod = x % (2 * y);
-        return [mod <= y ? mod : 2 * y - mod];
-    }],
+    [Operation.Bounce, (x, y) => [bounce(x, y)]],
     [Operation.Distance, (x, y) => [Math.abs(y - x)]],
     [Operation.And, (x, y) => [applyBitwise(x, y, (a, b) => a && b)]],
     [Operation.Nand, (x, y) => [applyBitwise(x, y, (a, b) => !(a && b))]],
