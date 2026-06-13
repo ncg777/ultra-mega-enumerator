@@ -273,6 +273,26 @@ describe('Sequence Class', () => {
         expect(result.toArray()).toEqual([1, 4, 3, 2, 0]);
     });
 
+    test('combine() with Bounce uses floored modulo for negative inputs', () => {
+        const x = new Sequence(-7, -3, -4);
+        const y = new Sequence(3, 3, 3);
+
+        const result = Sequence.combine(Combiner.Recycle, Operation.Bounce, x, y);
+
+        // floored: -7 mod 6 = 5 → period-5=1; -3 mod 6 = 3 → 3; -4 mod 6 = 2 → 2
+        expect(result.toArray()).toEqual([1, 3, 2]);
+    });
+
+    test('combine() with Modulo uses floored definition for negative numbers', () => {
+        const x = new Sequence(-7, -1, 7, -7);
+        const y = new Sequence(3, 3, -3, -3);
+
+        const result = Sequence.combine(Combiner.Recycle, Operation.Modulo, x, y);
+
+        // floored: -7 mod 3 = 2; -1 mod 3 = 2; 7 mod -3 = -2; -7 mod -3 = -1
+        expect(result.toArray()).toEqual([2, 2, -2, -1]);
+    });
+
     test('combine() with Operation.TritAnd', () => {
         const x = new Sequence(1, 1, 0, -1);
         const y = new Sequence(1, -1, 1, -1);
