@@ -180,7 +180,7 @@ function bounce(n: number, limit: number): number {
 
     const distance = Math.abs(limit);
     const period = distance * 2;
-    const normalized = ((n % period) + period) % period;
+    const normalized = n - Math.floor(n / period) * period;
 
     return normalized <= distance ? normalized : period - normalized;
 }
@@ -230,7 +230,7 @@ const ops = new Map<Operation, (x: number, y: number) => number[]>([
     [Operation.Log, (x, y) => [y > 1 && x > 0 ? Math.floor(Math.log(x) / Math.log(y)) : 0]],
     [Operation.Min, (x, y) => [Math.min(x, y)]],
     [Operation.Max, (x, y) => [Math.max(x, y)]],
-    [Operation.Modulo, (x, y) => [y !== 0 ? x % y : 0]],
+    [Operation.Modulo, (x, y) => [y !== 0 ? x - Math.floor(x / y) * y : 0]],
     [Operation.Bounce, (x, y) => [bounce(x, y)]],
     [Operation.Distance, (x, y) => [Math.abs(y - x)]],
     [Operation.And, (x, y) => [applyBitwise(x, y, (a, b) => a && b)]],
