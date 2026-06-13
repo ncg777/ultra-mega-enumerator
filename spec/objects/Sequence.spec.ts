@@ -270,7 +270,7 @@ describe('Sequence Class', () => {
 
         const result = Sequence.combine(Combiner.Recycle, Operation.Bounce, x, y);
 
-        expect(result.toArray()).toEqual([1, 4, 3, 2, 0]);
+        expect(result.toArray()).toEqual([1, 4, -3, -2, 0]);
     });
 
     test('combine() with Bounce uses floored modulo for negative inputs', () => {

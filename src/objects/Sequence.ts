@@ -182,7 +182,12 @@ function bounce(n: number, limit: number): number {
     const period = distance * 2;
     const normalized = n - Math.floor(n / period) * period;
 
-    return normalized <= distance ? normalized : period - normalized;
+    const value =
+        normalized <= distance
+            ? normalized
+            : period - normalized;
+
+    return value == 0 ? 0 : Math.sign(limit) * value;
 }
 
 function projectBits(a:number, b:number) {
