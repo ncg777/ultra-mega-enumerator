@@ -103,7 +103,7 @@ export class PCS12 extends ImmutableCombination {
       const forteNumbersToPCS12Dict = new Map<string, PCS12>();
       const forteNumbersCommonNames = new Map<string, string>();
       for(let row of forteRows) {
-          console.log("Processing row: " + row.toString())
+          //console.log("Processing row: " + row.toString())
           const forteNumber = row[0];
           const ns = (!row[1] || row[1].trim().length === 0) ? [] : row[1].split(/\s+/).map(num => Number(num));
           const c = ImmutableCombination.createWithSizeAndSet(12, new Set<number>(ns));
@@ -312,18 +312,18 @@ export class PCS12 extends ImmutableCombination {
   private static _isInitializing: boolean = false;
   public static async init(): Promise<void> {
     if (this._isInitialized) {
-        console.log("PCS12 is already initialized.");
+        //console.log("PCS12 is already initialized.");
         return;
     }
     if (this._isInitializing) {
-      console.log("PCS12 is initializing.");
+      //console.log("PCS12 is initializing.");
       return;
     }
     this._isInitializing = true;
-    console.log("Initializing PCS12...");
+    //console.log("Initializing PCS12...");
     
     await PCS12.generateMaps();
-    console.log("PCS12 initialized successfully.");
+    //console.log("PCS12 initialized successfully.");
     this._isInitialized = true;
     this._isInitializing = false;
   }
