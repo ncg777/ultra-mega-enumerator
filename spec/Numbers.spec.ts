@@ -190,4 +190,31 @@ describe('Numbers Class Tests', () => {
       expect(Numbers.tritNnot(1)).toBe(-1);
     });
   });
+  describe('Bit Permutations', () => {
+    test('buildPermutation32 returns a valid permutation of 0..31', () => {
+      const seeds = [0, 1, 2, 7, 31, 123456789];
+
+      for (const b of seeds) {
+        const perm = Numbers.buildPermutation32(b);
+        expect(perm.length).toBe(32);
+        expect(new Set(perm).size).toBe(32);
+        expect([...perm].sort((x, y) => x - y)).toEqual([...Array(32).keys()]);
+      }
+    });
+
+    test('buildPermutation32 is deterministic', () => {
+      expect(Numbers.buildPermutation32(42)).toEqual(Numbers.buildPermutation32(42));
+    });
+
+    test('permuteBits is deterministic', () => {
+      const values = [0, 1, 0x12345678, 0x89abcdef, 0xffffffff];
+      const seeds = [0, 1, 2, 11, 42, 123456789];
+
+      for (const a of values) {
+        for (const b of seeds) {
+          expect(Numbers.permuteBits(a, b)).toBe(Numbers.permuteBits(a, b));
+        }
+      }
+    });
+  });
 });
