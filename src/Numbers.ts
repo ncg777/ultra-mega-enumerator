@@ -298,6 +298,30 @@ export class Numbers {
         return parseInt(binaryArray.reverse().join(''), 2);
     }
 
+    static getPermutation32(b: number): number[] {
+        const N = 32;
+        const factorials: bigint[] = new Array(N + 1);
+        factorials[0] = 1n;
+        for (let i = 1; i <= N; i++) {
+            factorials[i] = factorials[i - 1] * BigInt(i);
+        }
+
+        let remaining = BigInt(b) % factorials[N];
+        if (remaining < 0n) remaining += factorials[N];
+
+        const elements: number[] = [];
+        for (let i = 0; i < N; i++) elements.push(i);
+
+        const permutation: number[] = [];
+        for (let i = N - 1; i >= 0; i--) {
+            const digit = Number(remaining / factorials[i]);
+            remaining = remaining % factorials[i];
+            permutation.push(elements.splice(digit, 1)[0]);
+        }
+
+        return permutation;
+    }
+
     static getPermutation(n: number): number[] {
         if (n === 0) return [0];
 
@@ -344,24 +368,21 @@ export class Numbers {
     }
     
     static permuteBits(a: number, b: number): number {
-        let permutation = Numbers.getPermutation(b);
-        let permSize = permutation.length;
-        let numBits = 32;
-    
-        // Extend the permutation cyclically
-        let permMap: number[] = [];
-        for (let i = 0; i < numBits; i++) {
-            permMap[i] = permutation[i % permSize] + Math.floor(i / permSize) * permSize;
-        }
-    
+        const perm = Numbers.getPermutation32(b);
         let result = 0;
-        for (let i = 0; i < numBits; i++) {
-            let srcBit = (a >> i) & 1; // Extract bit i
-            let destBitPos = permMap[i] % numBits; // Keep within 32-bit range
-            result |= (srcBit << destBitPos); // Set bit in result
+        for (let i = 0; i < 32; i++) {
+            result |= ((a >> i) & 1) << perm[i];
         }
-    
-        return result >>> 0; // Ensure unsigned 32-bit integer
+        return result >>> 0;
+    }
+
+    static inversePermuteBits(x: number, b: number): number {
+        const perm = Numbers.getPermutation32(b);
+        let result = 0;
+        for (let i = 0; i < 32; i++) {
+            result |= ((x >> perm[i]) & 1) << i;
+        }
+        return result >>> 0;
     }
     static toBalancedTernary(n: number, nbdigits: number): number[] {
         const digitCount = Math.abs(nbdigits);
