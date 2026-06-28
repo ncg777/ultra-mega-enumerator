@@ -365,23 +365,6 @@ export class Numbers {
 
         return result >>> 0;
     }
-    static inversePermuteBits(x: number, b: number): number {
-        const perm = Numbers.buildPermutation32(b);
-
-        const inv = new Array<number>(32);
-        for (let i = 0; i < 32; i++) {
-            inv[perm[i]] = i;
-        }
-
-        let result = 0;
-
-        for (let i = 0; i < 32; i++) {
-            const bit = (x >> i) & 1;
-            result |= bit << inv[i];
-        }
-
-        return result >>> 0;
-    }
     static toBalancedTernary(n: number, nbdigits: number): number[] {
         const digitCount = Math.abs(nbdigits);
         const digits: number[] = [];
