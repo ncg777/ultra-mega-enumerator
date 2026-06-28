@@ -343,25 +343,44 @@ export class Numbers {
         return permutation;
     }
     
+    static buildPermutation32(b: number): number[] {
+        const perm: number[] = [];
+
+        for (let i = 0; i < 32; i++) {
+            const pos = b % (i + 1);
+            perm.splice(pos, 0, i);
+        }
+
+        return perm;
+    }
     static permuteBits(a: number, b: number): number {
-        let permutation = Numbers.getPermutation(b);
-        let permSize = permutation.length;
-        let numBits = 32;
-    
-        // Extend the permutation cyclically
-        let permMap: number[] = [];
-        for (let i = 0; i < numBits; i++) {
-            permMap[i] = permutation[i % permSize] + Math.floor(i / permSize) * permSize;
-        }
-    
+        const perm = Numbers.buildPermutation32(b);
+
         let result = 0;
-        for (let i = 0; i < numBits; i++) {
-            let srcBit = (a >> i) & 1; // Extract bit i
-            let destBitPos = permMap[i] % numBits; // Keep within 32-bit range
-            result |= (srcBit << destBitPos); // Set bit in result
+
+        for (let i = 0; i < 32; i++) {
+            const bit = (a >> i) & 1;
+            result |= bit << perm[i];
         }
-    
-        return result >>> 0; // Ensure unsigned 32-bit integer
+
+        return result >>> 0;
+    }
+    static inversePermuteBits(x: number, b: number): number {
+        const perm = Numbers.buildPermutation32(b);
+
+        const inv = new Array<number>(32);
+        for (let i = 0; i < 32; i++) {
+            inv[perm[i]] = i;
+        }
+
+        let result = 0;
+
+        for (let i = 0; i < 32; i++) {
+            const bit = (x >> i) & 1;
+            result |= bit << inv[i];
+        }
+
+        return result >>> 0;
     }
     static toBalancedTernary(n: number, nbdigits: number): number[] {
         const digitCount = Math.abs(nbdigits);
