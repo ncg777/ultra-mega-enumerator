@@ -196,7 +196,7 @@ describe('Numbers Class Tests', () => {
 
       for (const b of seeds) {
         const perm = Numbers.buildPermutation32(b);
-        expect(perm).toHaveLength(32);
+        expect(perm.length).toBe(32);
         expect(new Set(perm).size).toBe(32);
         expect([...perm].sort((x, y) => x - y)).toEqual([...Array(32).keys()]);
       }
