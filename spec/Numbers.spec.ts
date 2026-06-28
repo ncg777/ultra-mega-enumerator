@@ -216,5 +216,19 @@ describe('Numbers Class Tests', () => {
         }
       }
     });
+
+    test('permuteBits uses getPermutation directly', () => {
+      const a = 0xffffffff;
+      const b = 42;
+      const perm = Numbers.getPermutation(b);
+      let expected = 0;
+
+      for (let i = 0; i < perm.length; i++) {
+        expected |= ((a >>> i) & 1) << perm[i];
+      }
+
+      expect(perm.length).toBeLessThan(32);
+      expect(Numbers.permuteBits(a, b)).toBe(expected >>> 0);
+    });
   });
 });

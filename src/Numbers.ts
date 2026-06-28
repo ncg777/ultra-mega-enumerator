@@ -354,12 +354,12 @@ export class Numbers {
         return perm;
     }
     static permuteBits(a: number, b: number): number {
-        const perm = Numbers.buildPermutation32(b);
+        const perm = Numbers.getPermutation(b);
 
         let result = 0;
 
-        for (let i = 0; i < 32; i++) {
-            const bit = (a >> i) & 1;
+        for (let i = 0; i < perm.length; i++) {
+            const bit = (a >>> i) & 1;
             result |= bit << perm[i];
         }
 
