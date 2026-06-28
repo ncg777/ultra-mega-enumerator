@@ -298,70 +298,90 @@ export class Numbers {
         return parseInt(binaryArray.reverse().join(''), 2);
     }
 
+    static offset(k: number): number {
+        let o = 0;
+        for (let i = 1; i < k; i++) {
+            o += this.factorial(i);
+        }
+        return o;
+    }
+
     static getPermutation(n: number): number[] {
-        if (n === 0) return [0];
-
-        const absN = Math.abs(n);
-
-        // Find minimal k such that k! > absN
+        // Step 1: find k such that offset(k) <= n < offset(k+1)
         let k = 1;
-        let fact = 1;
-        while (fact <= absN) {
+        while (this.offset(k + 1) <= n) {
             k++;
-            fact *= k;
-        }
-        k--; // overshot
-
-        const totalPerms = fact / (k + 1) * (k + 1); // (k+1)!
-        if (absN >= totalPerms) {
-            throw new Error(`n is too large to generate a permutation of size ${k + 1}`);
         }
 
-        // Build Lehmer code
-        const lehmerCode: number[] = [];
-        let remaining = absN;
-        fact /= (k + 1); // Start with k! for k+1 elements
-        for (let i = k; i >= 1; i--) {
-            lehmerCode.push(Math.floor(remaining / fact));
-            remaining %= fact;
-            if (i > 1) fact /= i;
-        }
+        // Step 2: local rank within S_k
+        let rank = n - this.offset(k);
 
-        // Build permutation from Lehmer code
+        // Step 3: decode rank into Lehmer permutation of size k
         const elements: number[] = [];
-        for (let i = 0; i <= k; i++) elements.push(i);
+        for (let i = 0; i < k; i++) elements.push(i);
 
         const permutation: number[] = [];
-        for (const code of lehmerCode) {
-            permutation.push(elements.splice(code, 1)[0]);
+        for (let i = k; i >= 1; i--) {
+            const fact = this.factorial(i - 1);
+            const idx = Math.floor(rank / fact);
+            rank = rank % fact;
+            permutation.push(elements.splice(idx, 1)[0]);
         }
-        permutation.push(elements[0]); // add last remaining element
-
-        // For negative n, reverse the permutation
-        if (n < 0) permutation.reverse();
 
         return permutation;
     }
-    
+
+    static getPermutationNumber(perm: number[]): number {
+        const k = perm.length;
+        const elements: number[] = [];
+        for (let i = 0; i < k; i++) elements.push(i);
+
+        let rank = 0;
+        let fact = this.factorial(k - 1);
+
+        for (let i = 0; i < k; i++) {
+            const idx = elements.indexOf(perm[i]);
+            rank += idx * fact;
+            elements.splice(idx, 1);
+            if (i < k - 1) {
+                fact = Math.round(fact / (k - 1 - i));
+            }
+        }
+
+        return this.offset(k) + rank;
+    }
+
     static permuteBits(a: number, b: number): number {
-        let permutation = Numbers.getPermutation(b);
-        let permSize = permutation.length;
-        let numBits = 32;
-    
-        // Extend the permutation cyclically
-        let permMap: number[] = [];
-        for (let i = 0; i < numBits; i++) {
-            permMap[i] = permutation[i % permSize] + Math.floor(i / permSize) * permSize;
+        const perm = Numbers.getPermutation(b);
+        const k = perm.length;
+
+        let result = a;
+        for (let i = 0; i < k; i++) {
+            const dst = perm[i];
+            const bit = (a >> i) & 1;
+            result = (result & ~(1 << dst)) | (bit << dst);
         }
-    
-        let result = 0;
-        for (let i = 0; i < numBits; i++) {
-            let srcBit = (a >> i) & 1; // Extract bit i
-            let destBitPos = permMap[i] % numBits; // Keep within 32-bit range
-            result |= (srcBit << destBitPos); // Set bit in result
+
+        return result >>> 0;
+    }
+
+    static inversePermuteBits(x: number, b: number): number {
+        const perm = Numbers.getPermutation(b);
+        const k = perm.length;
+
+        const inverse: number[] = new Array(k);
+        for (let i = 0; i < k; i++) {
+            inverse[perm[i]] = i;
         }
-    
-        return result >>> 0; // Ensure unsigned 32-bit integer
+
+        let result = x;
+        for (let i = 0; i < k; i++) {
+            const dst = inverse[i];
+            const bit = (x >> i) & 1;
+            result = (result & ~(1 << dst)) | (bit << dst);
+        }
+
+        return result >>> 0;
     }
     static toBalancedTernary(n: number, nbdigits: number): number[] {
         const digitCount = Math.abs(nbdigits);
