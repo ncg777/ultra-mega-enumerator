@@ -342,17 +342,7 @@ export class Numbers {
 
         return permutation;
     }
-    
-    static buildPermutation32(b: number): number[] {
-        const perm: number[] = [];
 
-        for (let i = 0; i < 32; i++) {
-            const pos = b % (i + 1);
-            perm.splice(pos, 0, i);
-        }
-
-        return perm;
-    }
     static permuteBits(a: number, b: number): number {
         const perm = Numbers.getPermutation(b);
 
