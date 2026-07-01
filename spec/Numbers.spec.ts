@@ -281,6 +281,101 @@ describe('Numbers Class Tests', () => {
     });
   });
 
+  describe('getPermutationOrbitNumbers', () => {
+    test('identity permutation returns single-element orbit', () => {
+      const id = [0];
+      expect(Numbers.getPermutationOrbitNumbers(id)).toEqual([Numbers.getPermutationNumber(id)]);
+    });
+
+    test('identity permutation of size 3 returns single-element orbit', () => {
+      const id = [0, 1, 2];
+      expect(Numbers.getPermutationOrbitNumbers(id)).toEqual([Numbers.getPermutationNumber(id)]);
+    });
+
+    test('transposition [1,0] has orbit of length 2', () => {
+      const p = [1, 0];
+      const orbit = Numbers.getPermutationOrbitNumbers(p);
+      expect(orbit.length).toBe(2);
+      expect(orbit[0]).toBe(Numbers.getPermutationNumber([1, 0]));
+      expect(orbit[orbit.length - 1]).toBe(Numbers.getPermutationNumber([0, 1]));
+    });
+
+    test('3-cycle [1,2,0] has orbit of length 3', () => {
+      const p = [1, 2, 0];
+      const orbit = Numbers.getPermutationOrbitNumbers(p);
+      expect(orbit.length).toBe(3);
+      expect(orbit[0]).toBe(Numbers.getPermutationNumber([1, 2, 0]));
+      expect(orbit[orbit.length - 1]).toBe(Numbers.getPermutationNumber([0, 1, 2]));
+    });
+
+    test('first output equals rank of input permutation', () => {
+      const p = [2, 0, 1];
+      const orbit = Numbers.getPermutationOrbitNumbers(p);
+      expect(orbit[0]).toBe(Numbers.getPermutationNumber(p));
+    });
+
+    test('last output is always rank of identity', () => {
+      for (const p of [[1, 0], [1, 2, 0], [2, 0, 1], [3, 2, 1, 0]]) {
+        const orbit = Numbers.getPermutationOrbitNumbers(p);
+        const id = Array.from({ length: p.length }, (_, i) => i);
+        expect(orbit[orbit.length - 1]).toBe(Numbers.getPermutationNumber(id));
+      }
+    });
+
+    test('rank/unrank consistency: getPermutation(r) matches orbit element', () => {
+      const p = [1, 2, 0];
+      const expectedPerms = [[1, 2, 0], [2, 0, 1], [0, 1, 2]];
+      const orbit = Numbers.getPermutationOrbitNumbers(p);
+      for (let i = 0; i < orbit.length; i++) {
+        expect(Numbers.getPermutation(orbit[i])).toEqual(expectedPerms[i]);
+      }
+    });
+
+    test('orbit of [3,2,1,0] has length 2 (self-inverse)', () => {
+      const p = [3, 2, 1, 0];
+      const orbit = Numbers.getPermutationOrbitNumbers(p);
+      expect(orbit.length).toBe(2);
+      expect(orbit[0]).toBe(Numbers.getPermutationNumber([3, 2, 1, 0]));
+      expect(orbit[1]).toBe(Numbers.getPermutationNumber([0, 1, 2, 3]));
+    });
+
+    test('throws on duplicate elements', () => {
+      expect(() => Numbers.getPermutationOrbitNumbers([0, 0])).toThrow(
+        'getPermutationNumber: duplicate element 0'
+      );
+    });
+
+    test('throws on out-of-range entries (too large)', () => {
+      expect(() => Numbers.getPermutationOrbitNumbers([0, 2])).toThrow(
+        'getPermutationNumber: element 2 is out of range'
+      );
+    });
+
+    test('throws on negative values', () => {
+      expect(() => Numbers.getPermutationOrbitNumbers([-1, 0, 1])).toThrow(
+        'getPermutationNumber: element -1 is out of range'
+      );
+    });
+
+    test('throws on non-integer elements', () => {
+      expect(() => Numbers.getPermutationOrbitNumbers([0.5, 1])).toThrow(
+        'getPermutationNumber: element 0.5 is not an integer'
+      );
+    });
+
+    test('throws on null input', () => {
+      expect(() => Numbers.getPermutationOrbitNumbers(null as unknown as number[])).toThrow(
+        'getPermutationNumber: input cannot be null or undefined'
+      );
+    });
+
+    test('throws on empty array', () => {
+      expect(() => Numbers.getPermutationOrbitNumbers([])).toThrow(
+        'getPermutationNumber: permutation cannot be empty'
+      );
+    });
+  });
+
   describe('Bit Permutations', () => {
     test('permuteBits is deterministic', () => {
       const values = [0, 1, -1, 40, -40, 12345, -12345];

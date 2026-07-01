@@ -403,6 +403,24 @@ export class Numbers {
         return permutation;
     }
 
+    static getPermutationOrbitNumbers(permutation: number[]): number[] {
+        Numbers.getPermutationNumber(permutation); // validates; throws if invalid
+
+        const n = permutation.length;
+        const isIdentity = (p: number[]) => p.every((v, i) => v === i);
+
+        const orbit: number[] = [];
+        let current = [...permutation];
+
+        while (!isIdentity(current)) {
+            orbit.push(Numbers.getPermutationNumber(current));
+            current = current.map(v => permutation[v]);
+        }
+
+        orbit.push(Numbers.getPermutationNumber(Array.from({ length: n }, (_, i) => i)));
+        return orbit;
+    }
+
     static permuteBits(a: number, b: number): number {
         const perm = Numbers.getPermutation(b);
 
