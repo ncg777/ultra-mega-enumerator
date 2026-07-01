@@ -192,7 +192,7 @@ describe('Numbers Class Tests', () => {
   });
   describe('Bit Permutations', () => {
     test('permuteBits is deterministic', () => {
-      const values = [0, 1, 0x12345678, 0x89abcdef, 0xffffffff];
+      const values = [0, 1, -1, 40, -40, 12345, -12345];
       const seeds = [0, 1, 2, 11, 42, 123456789];
 
       for (const a of values) {
@@ -203,30 +203,47 @@ describe('Numbers Class Tests', () => {
     });
 
     test('permuteBits uses getPermutation directly', () => {
-      const a = 0xffffffff;
+      const a = 12345;
       const b = 42;
       const perm = Numbers.getPermutation(b);
-      let expected = 0;
 
+      const bitCount = Math.floor(Math.log2(Math.abs(a))) + 1;
+      const ndigits = Math.max(perm.length, bitCount);
+      const bits = Numbers.toBinary(a, ndigits);
+
+      const expectedBits = new Array<number>(ndigits).fill(0);
       for (let i = 0; i < perm.length; i++) {
-        expected |= ((a >>> i) & 1) << perm[i];
+        expectedBits[perm[i]] = bits[i];
       }
-      // Bits outside the permuted range should be preserved unchanged.
-      expected |= (a & (0xffffffff << perm.length)) >>> 0;
+      for (let i = perm.length; i < ndigits; i++) {
+        expectedBits[i] = bits[i];
+      }
+      const expected = Numbers.fromBinary(expectedBits);
 
-      expect(perm.length).toBeLessThan(32);
-      expect(Numbers.permuteBits(a, b)).toBe(expected >>> 0);
+      expect(Numbers.permuteBits(a, b)).toBe(expected);
     });
 
     test('permuteBits preserves bits outside the permuted range', () => {
-      const b = 2; // small permutation, e.g. size 2 -> only bits 0-1 are permuted
+      const a = 12345;
+      const b = 2; // small permutation -> only the leading bits are permuted
       const perm = Numbers.getPermutation(b);
-      const a = 0xffffffff;
 
-      const result = Numbers.permuteBits(a, b);
-      const unpermutedMask = (0xffffffff << perm.length) >>> 0;
+      const bitCount = Math.floor(Math.log2(Math.abs(a))) + 1;
+      const ndigits = Math.max(perm.length, bitCount);
+      const bits = Numbers.toBinary(a, ndigits);
+      const resultBits = Numbers.toBinary(Numbers.permuteBits(a, b), ndigits);
 
-      expect(result & unpermutedMask).toBe(a & unpermutedMask);
+      for (let i = perm.length; i < ndigits; i++) {
+        expect(resultBits[i]).toBe(bits[i]);
+      }
+    });
+
+    test('permuteBits with identity permutation returns the input', () => {
+      // getPermutation(0) === [0], a single-element identity permutation.
+      const values = [0, 1, -1, 7, -7, 12345, -12345];
+      for (const a of values) {
+        expect(Numbers.permuteBits(a, 0)).toBe(a);
+      }
     });
   });
 

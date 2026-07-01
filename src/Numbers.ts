@@ -346,18 +346,25 @@ export class Numbers {
     static permuteBits(a: number, b: number): number {
         const perm = Numbers.getPermutation(b);
 
-        let result = 0;
+        const absA = Math.abs(a);
+        const bitCount = absA === 0 ? 1 : Math.floor(Math.log2(absA)) + 1;
+        const ndigits = Math.max(perm.length, bitCount);
 
+        // Big-endian bits (index 0 is the most significant bit).
+        const bits = Numbers.toBinary(a, ndigits);
+        const result = new Array<number>(ndigits).fill(0);
+
+        // Move the permuted bits to their new positions.
         for (let i = 0; i < perm.length; i++) {
-            const bit = (a >>> i) & 1;
-            result |= bit << perm[i];
+            result[perm[i]] = bits[i];
         }
 
         // Bits outside the permuted range are left untouched.
-        const unpermutedMask = (0xffffffff << perm.length) >>> 0;
-        result |= a & unpermutedMask;
+        for (let i = perm.length; i < ndigits; i++) {
+            result[i] = bits[i];
+        }
 
-        return result >>> 0;
+        return Numbers.fromBinary(result);
     }
 
     static permuteTrits(a: number, b: number): number {
