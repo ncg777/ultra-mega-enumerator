@@ -353,7 +353,35 @@ export class Numbers {
             result |= bit << perm[i];
         }
 
+        // Bits outside the permuted range are left untouched.
+        const unpermutedMask = (0xffffffff << perm.length) >>> 0;
+        result |= a & unpermutedMask;
+
         return result >>> 0;
+    }
+
+    static permuteTrits(a: number, b: number): number {
+        const perm = Numbers.getPermutation(b);
+
+        const absA = Math.abs(a);
+        const tritCount = absA === 0 ? 1 : Math.ceil(Math.log(2 * absA + 1) / Math.log(3));
+        const ndigits = Math.max(perm.length, tritCount);
+
+        // Big-endian trits (index 0 is the most significant trit).
+        const trits = Numbers.toBalancedTernary(a, ndigits);
+        const result = new Array<number>(ndigits).fill(0);
+
+        // Move the permuted trits to their new positions.
+        for (let i = 0; i < perm.length; i++) {
+            result[perm[i]] = trits[i];
+        }
+
+        // Trits outside the permuted range are left untouched.
+        for (let i = perm.length; i < ndigits; i++) {
+            result[i] = trits[i];
+        }
+
+        return Numbers.fromBalancedTernary(result);
     }
     static toBalancedTernary(n: number, nbdigits: number): number[] {
         const digitCount = Math.abs(nbdigits);

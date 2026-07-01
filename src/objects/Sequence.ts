@@ -38,6 +38,7 @@ export enum Operation {
     ExpandBitsFill = 'ExpandBitsFill',
     CantorIntervalBinaryNumber = 'CantorIntervalBinaryNumber',
     PermuteBits = 'PermuteBits',
+    PermuteTrits = 'PermuteTrits',
     HardThreshold = 'HardThreshold',
     RandInt = 'RandInt',
     IterateBetween = 'IterateBetween',
@@ -261,6 +262,7 @@ const ops = new Map<Operation, (x: number, y: number) => number[]>([
     [Operation.ExpandBitsFill, (x, y) => [Numbers.expandBits(x, y, 'bit')]],
     [Operation.CantorIntervalBinaryNumber, (x, y) => [Numbers.CantorIntervalBinaryNumber(x, y)]],
     [Operation.PermuteBits, (x, y) => [Numbers.permuteBits(x, y)]],
+    [Operation.PermuteTrits, (x, y) => [Numbers.permuteTrits(x, y)]],
     [Operation.HardThreshold, (x, y) => [Math.abs(x) > Math.abs(y) ? 0 : x]],
     [Operation.RandInt, (x, y) => {
         let a = Math.min(x, y);

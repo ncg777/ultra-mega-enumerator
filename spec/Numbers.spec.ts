@@ -211,9 +211,79 @@ describe('Numbers Class Tests', () => {
       for (let i = 0; i < perm.length; i++) {
         expected |= ((a >>> i) & 1) << perm[i];
       }
+      // Bits outside the permuted range should be preserved unchanged.
+      expected |= (a & (0xffffffff << perm.length)) >>> 0;
 
       expect(perm.length).toBeLessThan(32);
       expect(Numbers.permuteBits(a, b)).toBe(expected >>> 0);
+    });
+
+    test('permuteBits preserves bits outside the permuted range', () => {
+      const b = 2; // small permutation, e.g. size 2 -> only bits 0-1 are permuted
+      const perm = Numbers.getPermutation(b);
+      const a = 0xffffffff;
+
+      const result = Numbers.permuteBits(a, b);
+      const unpermutedMask = (0xffffffff << perm.length) >>> 0;
+
+      expect(result & unpermutedMask).toBe(a & unpermutedMask);
+    });
+  });
+
+  describe('Trit Permutations', () => {
+    test('permuteTrits is deterministic', () => {
+      const values = [0, 1, -1, 40, -40, 12345, -12345];
+      const seeds = [0, 1, 2, 11, 42, 123456789];
+
+      for (const a of values) {
+        for (const b of seeds) {
+          expect(Numbers.permuteTrits(a, b)).toBe(Numbers.permuteTrits(a, b));
+        }
+      }
+    });
+
+    test('permuteTrits uses getPermutation directly', () => {
+      const a = 12345;
+      const b = 42;
+      const perm = Numbers.getPermutation(b);
+
+      const tritCount = Math.ceil(Math.log(2 * Math.abs(a) + 1) / Math.log(3));
+      const ndigits = Math.max(perm.length, tritCount);
+      const trits = Numbers.toBalancedTernary(a, ndigits);
+
+      const expectedTrits = new Array<number>(ndigits).fill(0);
+      for (let i = 0; i < perm.length; i++) {
+        expectedTrits[perm[i]] = trits[i];
+      }
+      for (let i = perm.length; i < ndigits; i++) {
+        expectedTrits[i] = trits[i];
+      }
+      const expected = Numbers.fromBalancedTernary(expectedTrits);
+
+      expect(Numbers.permuteTrits(a, b)).toBe(expected);
+    });
+
+    test('permuteTrits preserves trits outside the permuted range', () => {
+      const a = 12345;
+      const b = 2; // small permutation -> only the leading trits are permuted
+      const perm = Numbers.getPermutation(b);
+
+      const tritCount = Math.ceil(Math.log(2 * Math.abs(a) + 1) / Math.log(3));
+      const ndigits = Math.max(perm.length, tritCount);
+      const trits = Numbers.toBalancedTernary(a, ndigits);
+      const resultTrits = Numbers.toBalancedTernary(Numbers.permuteTrits(a, b), ndigits);
+
+      for (let i = perm.length; i < ndigits; i++) {
+        expect(resultTrits[i]).toBe(trits[i]);
+      }
+    });
+
+    test('permuteTrits with identity permutation returns the input', () => {
+      // getPermutation(0) === [0], a single-element identity permutation.
+      const values = [0, 1, -1, 7, -7, 12345, -12345];
+      for (const a of values) {
+        expect(Numbers.permuteTrits(a, 0)).toBe(a);
+      }
     });
   });
 });
