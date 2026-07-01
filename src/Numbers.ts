@@ -298,6 +298,66 @@ export class Numbers {
         return parseInt(binaryArray.reverse().join(''), 2);
     }
 
+    static getPermutationNumber(permutation: number[]): number {
+        if (permutation === null || permutation === undefined) {
+            throw new Error("getPermutationNumber: input cannot be null or undefined");
+        }
+        const m = permutation.length;
+        if (m === 0) {
+            throw new Error("getPermutationNumber: permutation cannot be empty");
+        }
+
+        // Validate: integers, no duplicates, values in [0..m-1]
+        const seen = new Set<number>();
+        for (const v of permutation) {
+            if (!Number.isInteger(v)) {
+                throw new Error(`getPermutationNumber: element ${v} is not an integer`);
+            }
+            if (v < 0 || v >= m) {
+                throw new Error(`getPermutationNumber: element ${v} is out of range [0..${m - 1}]`);
+            }
+            if (seen.has(v)) {
+                throw new Error(`getPermutationNumber: duplicate element ${v}`);
+            }
+            seen.add(v);
+        }
+
+        // Base case: [0] -> 0
+        if (m === 1) {
+            return 0;
+        }
+
+        // Compute the Lehmer (factorial number system) rank of perm.
+        // rank = sum_{i=0}^{m-2} pos[i] * (m-1-i)!
+        // where pos[i] is the index of perm[i] among the still-available elements.
+        const lehmerRank = (perm: number[]): number => {
+            const n = perm.length;
+            const available: number[] = Array.from({ length: n }, (_, i) => i);
+            let rank = 0;
+            for (let i = 0; i < n - 1; i++) {
+                const pos = available.indexOf(perm[i]);
+                rank += pos * Numbers.factorial(n - 1 - i);
+                available.splice(pos, 1);
+            }
+            return rank;
+        };
+
+        // Sign convention: getPermutation(n>0) builds the forward Lehmer permutation,
+        // getPermutation(n<0) builds the forward permutation for |n| then reverses it.
+        // A forward Lehmer permutation of [0..m-1] always has its first element > 0
+        // when its rank >= (m-1)!  (i.e., its first Lehmer digit is non-zero).
+        // A reversed permutation produced by a negative n starts with 0 (since the
+        // forward permutation ends with 0 for those same n values).
+        // Therefore: if permutation[0] !== 0, it was produced by a positive n equal to
+        // its own Lehmer rank; otherwise it was produced by a negative n whose absolute
+        // value equals the Lehmer rank of the reversed permutation.
+        if (permutation[0] !== 0) {
+            return lehmerRank(permutation);
+        } else {
+            return -lehmerRank([...permutation].reverse());
+        }
+    }
+
     static getPermutation(n: number): number[] {
         if (n === 0) return [0];
 

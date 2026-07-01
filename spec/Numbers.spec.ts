@@ -190,6 +190,97 @@ describe('Numbers Class Tests', () => {
       expect(Numbers.tritNnot(1)).toBe(-1);
     });
   });
+  describe('Permutation Numbering', () => {
+    test('base case: [0] -> 0', () => {
+      expect(Numbers.getPermutationNumber([0])).toBe(0);
+    });
+
+    test('known small exact cases', () => {
+      expect(Numbers.getPermutationNumber([1, 0])).toBe(1);
+      expect(Numbers.getPermutationNumber([0, 1])).toBe(-1);
+      expect(Numbers.getPermutationNumber([1, 2, 0])).toBe(3);
+      expect(Numbers.getPermutationNumber([2, 1, 0])).toBe(5);
+      expect(Numbers.getPermutationNumber([0, 2, 1])).toBe(-3);
+      expect(Numbers.getPermutationNumber([0, 1, 2])).toBe(-5);
+      expect(Numbers.getPermutationNumber([3, 2, 1, 0])).toBe(23);
+      expect(Numbers.getPermutationNumber([0, 1, 2, 3])).toBe(-23);
+    });
+
+    test('round-trip: getPermutationNumber(getPermutation(n)) === n', () => {
+      const testValues = [0, 1, -1, 3, -3, 5, -5, 23, -23];
+      for (const n of testValues) {
+        const perm = Numbers.getPermutation(n);
+        expect(Numbers.getPermutationNumber(perm)).toBe(n);
+      }
+    });
+
+    test('round-trip: getPermutation(getPermutationNumber(p)) deep-equals p', () => {
+      const perms = [
+        [0],
+        [1, 0],
+        [0, 1],
+        [1, 2, 0],
+        [2, 1, 0],
+        [0, 2, 1],
+        [0, 1, 2],
+        [3, 2, 1, 0],
+        [0, 1, 2, 3],
+      ];
+      for (const p of perms) {
+        const n = Numbers.getPermutationNumber(p);
+        expect(Numbers.getPermutation(n)).toEqual(p);
+      }
+    });
+
+    test('throws on null input', () => {
+      expect(() => Numbers.getPermutationNumber(null as unknown as number[])).toThrow(
+        'getPermutationNumber: input cannot be null or undefined'
+      );
+    });
+
+    test('throws on undefined input', () => {
+      expect(() => Numbers.getPermutationNumber(undefined as unknown as number[])).toThrow(
+        'getPermutationNumber: input cannot be null or undefined'
+      );
+    });
+
+    test('throws on empty array', () => {
+      expect(() => Numbers.getPermutationNumber([])).toThrow(
+        'getPermutationNumber: permutation cannot be empty'
+      );
+    });
+
+    test('throws on non-integer elements', () => {
+      expect(() => Numbers.getPermutationNumber([0.5, 1])).toThrow(
+        'getPermutationNumber: element 0.5 is not an integer'
+      );
+    });
+
+    test('throws on duplicate elements', () => {
+      expect(() => Numbers.getPermutationNumber([0, 0])).toThrow(
+        'getPermutationNumber: duplicate element 0'
+      );
+    });
+
+    test('throws on values out of range (too large)', () => {
+      expect(() => Numbers.getPermutationNumber([0, 2])).toThrow(
+        'getPermutationNumber: element 2 is out of range'
+      );
+    });
+
+    test('throws on values out of range (negative)', () => {
+      expect(() => Numbers.getPermutationNumber([-1, 0, 1])).toThrow(
+        'getPermutationNumber: element -1 is out of range'
+      );
+    });
+
+    test('throws on missing values in [0..m-1]', () => {
+      expect(() => Numbers.getPermutationNumber([1, 2])).toThrow(
+        'getPermutationNumber: element 2 is out of range'
+      );
+    });
+  });
+
   describe('Bit Permutations', () => {
     test('permuteBits is deterministic', () => {
       const values = [0, 1, -1, 40, -40, 12345, -12345];
