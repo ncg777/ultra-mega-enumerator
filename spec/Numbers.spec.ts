@@ -211,21 +211,19 @@ describe('Numbers Class Tests', () => {
       const ndigits = Math.max(perm.length, bitCount);
       const bits = Numbers.toBinary(a, ndigits);
 
-      const expectedBits = new Array<number>(ndigits).fill(0);
+      // The least-significant `perm.length` bits are permuted; higher bits stay.
+      const expectedBits = [...bits];
       for (let i = 0; i < perm.length; i++) {
-        expectedBits[perm[i]] = bits[i];
-      }
-      for (let i = perm.length; i < ndigits; i++) {
-        expectedBits[i] = bits[i];
+        expectedBits[ndigits - 1 - perm[i]] = bits[ndigits - 1 - i];
       }
       const expected = Numbers.fromBinary(expectedBits);
 
       expect(Numbers.permuteBits(a, b)).toBe(expected);
     });
 
-    test('permuteBits preserves bits outside the permuted range', () => {
+    test('permuteBits preserves the high bits outside the permuted range', () => {
       const a = 12345;
-      const b = 2; // small permutation -> only the leading bits are permuted
+      const b = 2; // small permutation -> only the low bits are permuted
       const perm = Numbers.getPermutation(b);
 
       const bitCount = Math.floor(Math.log2(Math.abs(a))) + 1;
@@ -233,8 +231,33 @@ describe('Numbers Class Tests', () => {
       const bits = Numbers.toBinary(a, ndigits);
       const resultBits = Numbers.toBinary(Numbers.permuteBits(a, b), ndigits);
 
-      for (let i = perm.length; i < ndigits; i++) {
+      // High bits are the leading (big-endian) positions.
+      for (let i = 0; i < ndigits - perm.length; i++) {
         expect(resultBits[i]).toBe(bits[i]);
+      }
+    });
+
+    test('permuteBits orbits back to the original value', () => {
+      const cases = [
+        { a: 10, b: 4 },
+        { a: 10, b: 5 },
+        { a: 10, b: 7 },
+        { a: 42, b: 4 },
+        { a: 255, b: 3 },
+        { a: 1000, b: 11 },
+        { a: -10, b: 4 },
+        { a: -42, b: 7 },
+      ];
+
+      for (const { a, b } of cases) {
+        let current = Numbers.permuteBits(a, b);
+        let steps = 1;
+        const maxSteps = 10000;
+        while (current !== a && steps < maxSteps) {
+          current = Numbers.permuteBits(current, b);
+          steps++;
+        }
+        expect(current).toBe(a);
       }
     });
 
@@ -268,21 +291,19 @@ describe('Numbers Class Tests', () => {
       const ndigits = Math.max(perm.length, tritCount);
       const trits = Numbers.toBalancedTernary(a, ndigits);
 
-      const expectedTrits = new Array<number>(ndigits).fill(0);
+      // The least-significant `perm.length` trits are permuted; higher trits stay.
+      const expectedTrits = [...trits];
       for (let i = 0; i < perm.length; i++) {
-        expectedTrits[perm[i]] = trits[i];
-      }
-      for (let i = perm.length; i < ndigits; i++) {
-        expectedTrits[i] = trits[i];
+        expectedTrits[ndigits - 1 - perm[i]] = trits[ndigits - 1 - i];
       }
       const expected = Numbers.fromBalancedTernary(expectedTrits);
 
       expect(Numbers.permuteTrits(a, b)).toBe(expected);
     });
 
-    test('permuteTrits preserves trits outside the permuted range', () => {
+    test('permuteTrits preserves the high trits outside the permuted range', () => {
       const a = 12345;
-      const b = 2; // small permutation -> only the leading trits are permuted
+      const b = 2; // small permutation -> only the low trits are permuted
       const perm = Numbers.getPermutation(b);
 
       const tritCount = Math.ceil(Math.log(2 * Math.abs(a) + 1) / Math.log(3));
@@ -290,8 +311,52 @@ describe('Numbers Class Tests', () => {
       const trits = Numbers.toBalancedTernary(a, ndigits);
       const resultTrits = Numbers.toBalancedTernary(Numbers.permuteTrits(a, b), ndigits);
 
-      for (let i = perm.length; i < ndigits; i++) {
+      // High trits are the leading (big-endian) positions.
+      for (let i = 0; i < ndigits - perm.length; i++) {
         expect(resultTrits[i]).toBe(trits[i]);
+      }
+    });
+
+    test('permuteTrits orbits back to the original value', () => {
+      const cases = [
+        { a: 10, b: 4 },
+        { a: 10, b: 5 },
+        { a: 10, b: 7 },
+        { a: 42, b: 4 },
+        { a: 242, b: 3 },
+        { a: 1000, b: 11 },
+        { a: -10, b: 4 },
+        { a: -42, b: 7 },
+      ];
+
+      for (const { a, b } of cases) {
+        let current = Numbers.permuteTrits(a, b);
+        let steps = 1;
+        const maxSteps = 10000;
+        while (current !== a && steps < maxSteps) {
+          current = Numbers.permuteTrits(current, b);
+          steps++;
+        }
+        expect(current).toBe(a);
+      }
+    });
+
+    test('permuteTrits orbits back for a broad sweep of values', () => {
+      // Exercises both fully-permuted values (tritCount <= perm.length) and
+      // values with preserved high trits (tritCount > perm.length).
+      const seeds = [3, 4, 5, 6, 7, 11, 23, 42];
+      const maxSteps = 10000;
+
+      for (const b of seeds) {
+        for (let a = -200; a <= 200; a++) {
+          let current = Numbers.permuteTrits(a, b);
+          let steps = 1;
+          while (current !== a && steps < maxSteps) {
+            current = Numbers.permuteTrits(current, b);
+            steps++;
+          }
+          expect(current).toBe(a);
+        }
       }
     });
 

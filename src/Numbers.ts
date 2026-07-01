@@ -352,16 +352,13 @@ export class Numbers {
 
         // Big-endian bits (index 0 is the most significant bit).
         const bits = Numbers.toBinary(a, ndigits);
-        const result = new Array<number>(ndigits).fill(0);
+        const result = [...bits];
 
-        // Move the permuted bits to their new positions.
+        // Permute the least-significant `perm.length` bits so that repeated
+        // application with the same `b` forms a closed orbit. Higher bits are
+        // left untouched.
         for (let i = 0; i < perm.length; i++) {
-            result[perm[i]] = bits[i];
-        }
-
-        // Bits outside the permuted range are left untouched.
-        for (let i = perm.length; i < ndigits; i++) {
-            result[i] = bits[i];
+            result[ndigits - 1 - perm[i]] = bits[ndigits - 1 - i];
         }
 
         return Numbers.fromBinary(result);
@@ -376,16 +373,13 @@ export class Numbers {
 
         // Big-endian trits (index 0 is the most significant trit).
         const trits = Numbers.toBalancedTernary(a, ndigits);
-        const result = new Array<number>(ndigits).fill(0);
+        const result = [...trits];
 
-        // Move the permuted trits to their new positions.
+        // Permute the least-significant `perm.length` trits so that repeated
+        // application with the same `b` forms a closed orbit. Higher trits are
+        // left untouched.
         for (let i = 0; i < perm.length; i++) {
-            result[perm[i]] = trits[i];
-        }
-
-        // Trits outside the permuted range are left untouched.
-        for (let i = perm.length; i < ndigits; i++) {
-            result[i] = trits[i];
+            result[ndigits - 1 - perm[i]] = trits[ndigits - 1 - i];
         }
 
         return Numbers.fromBalancedTernary(result);
